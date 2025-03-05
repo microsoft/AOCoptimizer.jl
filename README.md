@@ -26,8 +26,28 @@ contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additio
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
+trademarks or logos is subject to and must follow
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+
+<!-- Tidyverse lifecycle badges, see https://www.tidyverse.org/lifecycle/ Uncomment or delete as needed. -->
+![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)<!--
+![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)
+![lifecycle](https://img.shields.io/badge/lifecycle-stable-green.svg)
+![lifecycle](https://img.shields.io/badge/lifecycle-retired-orange.svg)
+![lifecycle](https://img.shields.io/badge/lifecycle-archived-red.svg)
+![lifecycle](https://img.shields.io/badge/lifecycle-dormant-blue.svg) -->
+[![build](https://github.com/kkalinin_microsoft/AOCoptimizer.jl/workflows/CI/badge.svg)](https://github.com/kkalinin_microsoft/AOCoptimizer.jl/actions?query=workflow%3ACI)
+<!-- travis-ci.com badge, uncomment or delete as needed, depending on whether you are using that service. -->
+<!-- [![Build Status](https://travis-ci.com/kkalinin_microsoft/AOCoptimizer.jl.svg?branch=master)](https://travis-ci.com/kkalinin_microsoft/AOCoptimizer.jl) -->
+<!-- NOTE: Codecov.io badge now depends on the token, copy from their site after setting up -->
+<!-- Documentation -- uncomment or delete as needed -->
+<!--
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://kkalinin_microsoft.github.io/AOCoptimizer.jl/stable)
+[![Documentation](https://img.shields.io/badge/docs-master-blue.svg)](https://kkalinin_microsoft.github.io/AOCoptimizer.jl/dev)
+-->
+<!-- Aqua badge, see test/runtests.jl -->
+<!-- [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl) -->
