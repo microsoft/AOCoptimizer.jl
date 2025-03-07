@@ -1,18 +1,37 @@
 # Project
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+The [Analog Optical Computer (AOC)](https://www.microsoft.com/en-us/research/project/aoc/) project is building
+an analog optical computer that has the potential to accelerate AI inference and hard optimization workloads by 100x.
+To achieve this, we rely on a physical system to embody the computations and
+step away from several fundamentally limiting aspects of digital computing
+avoiding the separation of compute from memory,
+operating on both continuous and binary data and adopting asynchronous operation that
+allows the computer to operate at the “speed of light”.
+It is built using commodity optical and electronic technologies that are low cost and scalable,
+showing the potential of analog optical computing in the post-Moore Law’s era.
 
-As the maintainer of this project, please make a few updates:
+A key aspect of AOC is its hardware and abstraction have been co-designed with the target applications, i.e.,
+the families of optimization and ML algorithms, to take advantage of the computer’s strengths
+while accommodating its shortcoming and non-idealities.
+As part of the co-design, we are developing a set of algorithms that are tailored to the AOC hardware.
+We hope that this will enable the community to explore the potential of analog optical computing,
+to develop new algorithms and applications, and to inform the design of future analog optical computers.
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+This repository contains the implementation of AOC-inspired algorithms
+targetting optimization and control problems.
+The algorithms are implemented in the [Julia](https://julialang.org/) programming language and
+make use of modern computing capabilities (GPU acceleration, vectorization, etc.)
+to enable the exploration of the potential of analog optical computing for problems of non-trivial size.
+In their simplest form, they present an idealized (i.e., noise-free), scalable version of the AOC hardware.
+
+_TODO_: Add reference for citations
+
+## Getting started
+
 
 ## Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
 
