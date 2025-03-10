@@ -1,0 +1,26 @@
+{
+    "cSpell.words": [
+        "atol",
+        "checkdocs",
+        "concretization",
+        "Coptimizer",
+        "deploydocs",
+        "ising",
+        "Kirill",
+        "makedocs",
+        "nthreads",
+        "nvars",
+        "prettyurls",
+        "QUBO",
+        "QUMO",
+        "reresolve",
+        "sitename",
+        "stdlib",
+        "testset",
+        "timedout",
+        "toplevel",
+        "xchg",
+        "Xoshiro"
+    ],
+    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl"
+}

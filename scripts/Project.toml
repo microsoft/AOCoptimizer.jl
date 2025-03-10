@@ -1,0 +1,15 @@
+[deps]
+AOCoptimizer = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
+ArgParse = "c7e460c6-2fb9-53a9-8c5b-16f535851c63"
+FileWatching = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
+SnoopCompile = "aa65fe97-06da-5843-b5b1-d5d13cad87d2"
+
+[sources]
+AOCoptimizer = {path = ".."}
