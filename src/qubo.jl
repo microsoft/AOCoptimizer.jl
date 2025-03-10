@@ -120,7 +120,7 @@ function increase!(
     terms::AbstractMatrix{T},
     indices::AbstractVector{<:Integer};
     ctx::Union{Nothing,CancellationToken} = nothing,
-)::Bool where {TV<:Number, T<:Real}
+)::Bool where {TV<:Number,T<:Real}
     z = zero(TV)
     o = one(TV)
     vz = zero(T)

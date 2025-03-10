@@ -28,6 +28,7 @@ end
 include("threading.jl")
 include("runtime_utils.jl")
 include("qubo.jl")
+include("qumo.jl")
 
 include("precompile.jl")
 

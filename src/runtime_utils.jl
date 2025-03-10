@@ -57,7 +57,11 @@ The function `fn` should accept just one argument, which is a cancellation token
 it can return any value.
 Returns the output of all executions.
 """
-function run_for(fn::Function, timeout::TimePeriod; threads::Union{Nothing,Integer} = nothing)
+function run_for(
+    fn::Function,
+    timeout::TimePeriod;
+    threads::Union{Nothing,Integer} = nothing,
+)
     if timeout < Second(1)
         @error "Invalid timeout $timeout; aborting operation"
         throw(RuntimeException("Invalid timeout $timeout"))

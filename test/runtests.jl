@@ -21,8 +21,14 @@ if "DISABLE_AQUA" in keys(ENV)
     disable_aqua = true
 end
 
-include("test_qubo.jl")
+include("utils.jl")
 
+@testset verbose=true "AOCoptimizer tests" begin
+
+    include("test_qubo.jl")
+    include("test_qumo_mixed_ising.jl")
+
+end
 
 if !disable_jet
     @testset "static analysis with JET.jl" begin
