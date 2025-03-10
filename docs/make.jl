@@ -18,5 +18,5 @@ makedocs(
 deploydocs(
     repo = "github.com/microsoft/AOCoptimizer.jl.git",
     branch = "gh-pages",
-    push_preview = true
+    push_preview = true,
 )

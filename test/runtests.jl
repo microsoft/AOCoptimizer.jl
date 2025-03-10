@@ -26,7 +26,9 @@ end
 
 if !disable_jet
     @testset "static analysis with JET.jl" begin
-        @test isempty(JET.get_reports(report_package(AOCoptimizer, target_modules=(AOCoptimizer,))))
+        @test isempty(
+            JET.get_reports(report_package(AOCoptimizer, target_modules = (AOCoptimizer,))),
+        )
     end
 end
 
