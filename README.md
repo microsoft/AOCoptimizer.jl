@@ -69,4 +69,4 @@ Any use of third-party trademarks or logos are subject to those third-party's po
 [![Documentation](https://img.shields.io/badge/docs-master-blue.svg)](https://kkalinin_microsoft.github.io/AOCoptimizer.jl/dev)
 -->
 <!-- Aqua badge, see test/runtests.jl -->
-<!-- [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl) -->
+[![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
