@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "checkdocs",
+        "concretization",
         "Coptimizer",
         "deploydocs",
         "Kirill",
@@ -8,6 +9,7 @@
         "prettyurls",
         "sitename",
         "stdlib",
-        "testset"
+        "testset",
+        "toplevel"
     ]
 }
