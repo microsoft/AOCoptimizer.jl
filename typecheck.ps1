@@ -34,8 +34,10 @@ if ($Once) {
     $SameWindow = $true
 }
 
-Write-Verbose -Message "Arguments: $arguments"
+Write-Verbose -Message "Updating Julia packages"
+julia --project=$rootDir -e "using Pkg; Pkg.update()"
 
+Write-Verbose -Message "Arguments: $arguments"
 $julia = Get-Command julia
 
 if ($SameWindow) {

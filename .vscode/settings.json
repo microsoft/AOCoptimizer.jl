@@ -6,10 +6,17 @@
         "deploydocs",
         "Kirill",
         "makedocs",
+        "nthreads",
         "prettyurls",
+        "QUBO",
+        "QUMO",
         "sitename",
         "stdlib",
         "testset",
-        "toplevel"
-    ]
+        "timedout",
+        "toplevel",
+        "xchg",
+        "Xoshiro"
+    ],
+    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl"
 }

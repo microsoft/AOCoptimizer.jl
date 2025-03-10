@@ -21,7 +21,7 @@ if "DISABLE_AQUA" in keys(ENV)
     disable_aqua = true
 end
 
-# write tests here
+include("test_qubo.jl")
 
 
 if !disable_jet

@@ -101,9 +101,17 @@ function main(watch = Ref(true))
         # watch_file(input_file; arguments...)
         while watch[]
             RunOnce.run(arguments)
-            file, event = watch_folder(input_folder)
             @info "Waiting for changes in $input_folder"
-            @show file, event
+            file, event = watch_folder(input_folder)
+            if event.changed
+                @info "File changed: $file"
+            end
+            if event.renamed
+                @info "File renamed: $file"
+            end
+            if event.timedout
+                @info "Event cancelled"
+            end
         end
     end
 end
