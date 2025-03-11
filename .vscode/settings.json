@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "atol",
+        "binarization",
         "checkdocs",
         "concretization",
         "Coptimizer",
@@ -8,6 +9,7 @@
         "ising",
         "Kirill",
         "makedocs",
+        "mathengine",
         "nthreads",
         "nvars",
         "prettyurls",
@@ -21,6 +23,5 @@
         "toplevel",
         "xchg",
         "Xoshiro"
-    ],
-    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl"
+    ]
 }
