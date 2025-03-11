@@ -13,7 +13,7 @@ const _PAGES = [
         "manual/manual.md",
     ],
     "Background" => [
-        "background/background.md",
+        "background/abstractions.md",
     ],
     "API Reference" => [
         "reference/reference.md",

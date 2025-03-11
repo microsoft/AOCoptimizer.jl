@@ -2,7 +2,7 @@
 
 Welcome to the documentation of the [`AOCoptimizer.jl`](https://github.com/microsoft/AOCoptimizer.jl)
 Julia package.
-`AOCoptimizer.jl` is a package for solving Quadratic Unconstrained Mixed Optimization (`QUMO`) problems.
+`AOCoptimizer.jl` is a package for solving **Quadratic Unconstrained Mixed Optimization** (`QUMO`) problems.
 
 ## The `QUMO` Abstraction
 
@@ -22,7 +22,7 @@ represents practical problems using fewer variables and by staying closer to the
 formulation, it often yields better solutions than `QUBO`.
 
 Formally, `QUMO` seeks an assignment to `N` variables
-${\bf x}={\left[{x_1, \ldots,  x_N}\right]}^T$ of the objective:
+``{\bf x}={\left[{x_1, \ldots,  x_N}\right]}^T`` of the objective:
 
 ```math
   \min_{{\bf x}}\: -\frac{1}{2} {\bf x}^T \cdot {\bf Q} \cdot {\bf x} - {\bf q}^T\cdot {\bf x} =
@@ -30,14 +30,16 @@ ${\bf x}={\left[{x_1, \ldots,  x_N}\right]}^T$ of the objective:
   \frac{1}{2}\sum_{\substack{i,j=1 \\ i \neq j}}^N {Q_{ij}x_{i}x_{j}} - \sum_{i=1}^N {q_{i} x_{i}}
 ```
 
-for a given matrix ${\bf Q}$ and vector ${\bf q}$ representing the problem.
-The variables can be either binary, i.e., $x_i \in \{0, 1\}$,
-or continuous in the (closed) range, i.e., $x_i \in \left[-1, 1\right]$,
-while the matrix ${\bf Q}$ is symmetric, i.e., $Q_{ij} = Q_{ji}$.
+for a given matrix ``{\bf Q}`` and vector ``{\bf q}`` representing the problem.
+The variables can be either binary, i.e., ``x_i \in \{0, 1\}``,
+or continuous in the (closed) range, i.e., ``x_i \in \left[-1, 1\right]``,
+while the matrix ``{\bf Q}`` is symmetric, i.e., ``Q_{ij} = Q_{ji}``.
 We do not require semi-definiteness or convexity for the input problem.
-The diagonal entries of ${\bf Q}$ are zero for the binary variables,
-as quadratic terms of the form $Q_{ii} x_i^2$ are equivalent to
-$Q_{ii} x_i$ and, hence,
-can be incorporated into the relevant linear terms by updating $q_i$
-accordingly, i.e., $q_i \leftarrow q_i + 0.5\cdot Q_{ii}$ and then $Q_{ii} \leftarrow 0$.
+The diagonal entries of ``{\bf Q}`` are zero for the binary variables,
+as quadratic terms of the form ``Q_{ii} x_i^2`` are equivalent to
+``Q_{ii} x_i`` and, hence,
+can be incorporated into the relevant linear terms by updating ``q_i``
+accordingly, i.e., ``q_i \leftarrow q_i + 0.5\cdot Q_{ii}`` and then ``Q_{ii} \leftarrow 0``.
 
+For more details on the `QUMO` and related abstractions,
+please refer to the [abstractions](background/abstractions.md) section of the documentation.
