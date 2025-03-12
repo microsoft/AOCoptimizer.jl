@@ -28,6 +28,26 @@ _TODO_: Add reference for citations
 
 ## Getting started
 
+Install the package as follows:
+
+```julia
+] add https://github.com/microsoft/AOCoptimizer.jl
+# or
+using Pkg
+Pkg.add(url="https://github.com/microsoft/AOCoptimizer.jl", rev="main")
+```
+
+After successful installation, the following should work:
+
+```julia
+# if you want to use CUDA, first uncomment the following line to load CUDA.jl
+# using CUDA
+using AOCoptimizer
+```
+
+More details on installation and and basic usage can be found in the [docs](https://microsoft.github.io/AOCoptimizer.jl),
+in particular in the [installation](https://microsoft.github.io/AOCoptimizer.jl/dev/manual/installation/) and
+in the [example](https://microsoft.github.io/AOCoptimizer.jl/dev/tutorials/example/).
 
 ## Contributing
 
