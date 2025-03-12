@@ -8,6 +8,12 @@ TODO: Greedy heuristic in GPU
     The heuristic is used for benchmarking purposed (e.g., what a very naive
     algorithm can do). The implementation is CPU-based. Ideally, we would like
     to implement a GPU-based version of the algorithm.
+
+TODO: Consider the choice of embedding the linear terms in the diagonal of the QUBO matrix
+    The current implementation embeds the linear terms in the diagonal of the QUBO matrix.
+    This is a common practice. However. it may lead to usability issues and confusion.
+    We may need to reconsider this choice in the future.
+
 =#
 
 module QUBO
@@ -27,7 +33,27 @@ export qubo
 A structure representing a Quadratic Unconstrained Binary Optimization (QUBO) problem.
 The `qubo` structure contains the following fields:
 - `Sense`: The direction of optimization, either `MINIMIZATION` or `MAXIMIZATION`.
-- `Terms`: A matrix representing the quadratic terms of the QUBO problem.
+- `Terms`: A matrix representing the quadratic **and linear** terms of the QUBO problem.
+
+Assuming that ``Q_{i,j} = q.Terms[i ,j]`` is the matrix of quadratic terms for `q`
+an instance of `qubo{T}`, the QUBO problem can be expressed as finding a vector
+of binary variables ``x = (x_1, x_2, \\ldots, x_n)`` that minimizes (or, maximizes)
+the function:
+
+```math
+f_Q(x) = \\sum_{i=1}^{n}\\sum_{j=1}^{n} Q_{i,j} x_i x_j
+```
+
+Observe that diagonal elements of the matrix ``Q`` (`q.Terms`) represent linear terms.
+This economizes space and operations without changing the semantics of the problem.
+The semantics do not change since ``w_ii * x_i^2 = w_ii * x_i`` for any ``x_i`` in ``{0, 1}``
+(assuming that ``w_ii`` are the diagonal elements of the matrix).
+However, it is important to adjust the weights of the diagonal elements to express correctly
+the function ``f_Q(x)``. Since ``w_{ij}=w_{ji}``, the interaction between the variables
+``x_i`` and ``x_j`` (for ``i\\ne j``) is added twice in ``f_Q(x)``,
+once in the term ``w_{ij} x_i x_j`` and once in ``w_{ji} x_j x_i``.
+On the other hand there is a single term for the diagonal elements ``w_{ii} x_i^2 = w_{ii} x_i``.
+**Hence, it may be necessary to double the weights of the diagonal elements!.**
 """
 struct qubo{T<:Real}
     Sense::Direction

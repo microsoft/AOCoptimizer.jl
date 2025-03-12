@@ -31,7 +31,9 @@ const _PAGES = [
         ],
     ],
     =#
-    "Developer Docs" => ["developer/developer.md"],
+    "Developer Docs" => [
+        "developer/developer.md"
+    ],
     "Release notes" => "release_notes.md",
 ]
 
