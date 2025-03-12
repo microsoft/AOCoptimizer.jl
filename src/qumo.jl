@@ -142,17 +142,13 @@ Base.isapprox(q1::mixed_ising, q2::mixed_ising; kwargs...) =
     isapprox(q1.Offset, q2.Offset; kwargs...)
 
 """
-    number_of_variables(q::qumo{T})::Integer where {T<:Real}
+    number_of_variables(q::Union{qumo{T}, mixed_ising{T}})::Integer where {T<:Real}
 
-Returns the number of variables in the QUMO problem `q`.
+Returns the number of variables in the QUMO or Mixed Ising problem `q`.
 """
+function number_of_variables end
+
 number_of_variables(q::qumo) = size(q.Quadratic)[1]
-
-"""
-    number_of_variables(q::mixed_ising{T})::Integer where {T<:Real}
-
-Returns the number of variables in the mixed Ising problem `q`.
-"""
 number_of_variables(q::mixed_ising) = size(q.Quadratic)[1]
 
 """
@@ -251,8 +247,8 @@ end
     convert_to_qumo(q::mixed_ising{T})::qumo{T} where {T<:Real}
 
 Converts a mixed Ising problem, i.e., a problem where binaries are
-{-1, 1} and continuous in [-1, 1] to QUMO, where binaries
-are in {0, 1} and continuous stay at [-1, 1].
+``{-1, 1}`` and continuous in ``[-1, 1]`` to QUMO, where binaries
+are in ``{0, 1}`` and continuous stay at ``[-1, 1]``.
 """
 function convert_to_qumo(q::mixed_ising{T})::qumo{T} where {T<:Real}
     nvars = number_of_variables(q)
@@ -315,13 +311,13 @@ end
 """
     convert_positive_qumo_to_mixed_ising(q::qumo{T})::mixed_ising{T} where {T<:Real}
 
-    Converts a positive QUMO problem, i.e. a problem where all variables
-    are expected to be positive (binary in {0,1}, continuous in [0,1])
-    to mixed Ising, where binaries are {-1, 1} and continuous in [-1, 1].
+Converts a positive QUMO problem, i.e. a problem where all variables
+are expected to be positive (binary in ``{0,1}``, continuous in ``[0,1]``)
+to mixed Ising, where binaries are ``{-1, 1}`` and continuous in ``[-1, 1]``.
 
-    The transformation is achieved by observing that we need to scale
-    all variables x by 2x-1 to move from [0,1] to [-1,1]. Observe,
-    that the optimization objective is (1/2)x'Qx + f'x + c.
+The transformation is achieved by observing that we need to scale
+all variables ``x`` by ``2x-1`` to move from ``[0,1]`` to ``[-1,1]``. Observe,
+that the optimization objective is ``(1/2)x'Qx + f'x + c``.
 """
 function convert_positive_qumo_to_mixed_ising(q::qumo{T})::mixed_ising{T} where {T<:Real}
     quadratic = T(0.25) * q.Quadratic
@@ -347,13 +343,13 @@ end
 """
     convert_mixed_ising_to_positive_qumo(m::mixed_ising{T})::qumo{T} where T<:Real
 
-    Converts a mixed Ising problem, i.e. a problem where binaries are
-    {-1, 1} and continuous in [-1, 1] to positive QUMO, where all variables
-    are expected to be positive (binary in {0,1}, continuous in [0,1]).
+Converts a mixed Ising problem, i.e. a problem where binaries are
+``{-1, 1}`` and continuous in ``[-1, 1]`` to positive QUMO, where all variables
+are expected to be positive (binary in ``{0,1}``, continuous in ``[0,1]``).
 
-    The transformation is achieved by observing that we need to scale
-    all variables x by (x+1)/2 to move from [-1,1] to [0,1]. Observe,
-    that the optimization objective is (1/2)x'Qx + f'x + c.
+The transformation is achieved by observing that we need to scale
+all variables ``x`` by ``(x+1)/2`` to move from ``[-1,1]`` to ``[0,1]``. Observe,
+that the optimization objective is ``(1/2)x'Qx + f'x + c``.
 """
 function convert_mixed_ising_to_positive_qumo(m::mixed_ising{T})::qumo{T} where {T<:Real}
     quadratic = T(4.0) * m.Quadratic
