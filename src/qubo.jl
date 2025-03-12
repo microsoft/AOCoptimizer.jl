@@ -41,6 +41,9 @@ struct qubo{T<:Real}
         if s[1] != s[2]
             throw(ArgumentError("QUBO terms must be square"))
         end
+        if issymmetric(terms) == false
+            throw(ArgumentError("QUBO terms must be symmetric"))
+        end
 
         #=
         Observe that we do not check that the matrix does not contain

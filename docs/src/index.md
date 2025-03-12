@@ -43,3 +43,27 @@ accordingly, i.e., ``q_i \leftarrow q_i + 0.5\cdot Q_{ii}`` and then ``Q_{ii} \l
 
 For more details on the `QUMO` and related abstractions,
 please refer to the [abstractions](background/abstractions.md) section of the documentation.
+
+## Installation and Usage
+
+In a nutshell, you can install the package using the Julia package manager:
+
+```julia
+] add https://github.com/microsoft/AOCoptimizer.jl
+# or
+using Pkg
+Pkg.add(url="https://github.com/microsoft/AOCoptimizer.jl", rev="main")
+```
+
+After successful installation, you can use the package by loading it:
+
+```julia
+# if you want to use CUDA, first uncomment the following line to load CUDA.jl
+# using CUDA
+using AOCoptimizer
+```
+
+TODO: Add a simple example in the code above
+
+For more detailed installation instructions and related problems,
+please refer to the [installation](manual/installation.md) section of the documentation.

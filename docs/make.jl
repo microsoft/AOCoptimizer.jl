@@ -11,6 +11,7 @@ const _PAGES = [
     ],
     "Manual" => [
         "manual/manual.md",
+        "manual/installation.md",
     ],
     "Background" => [
         "background/abstractions.md",
