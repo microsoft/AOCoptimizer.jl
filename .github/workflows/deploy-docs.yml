@@ -30,7 +30,7 @@ jobs:
           if: env.ARTIFACT_URL != ''
           run: |
             curl -L -o artifact.zip -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$ARTIFACT_URL"
-            mkdir docs
+            mkdir -p docs
             unzip artifact.zip -d docs
 
         - name: Deploy to GitHub Pages
