@@ -7,6 +7,10 @@ on:
       - completed
   workflow_dispatch:
 
+permissions:
+  actions: read  # Needed to download artifacts
+  contents: write  # Needed to push to gh-pages
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,11 +18,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download Generated Documentation
-        uses: actions/download-artifact@v4
-        with:
-          name: documentation-output
-          path: docs  # Ensure this matches where documentation is generated
+        - name: Get Latest Artifact URL
+        run: |
+          ARTIFACT_URL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" \
+            | jq -r '.artifacts[] | select(.name=="documentation-output") | .archive_download_url' | head -n 1)
+          echo "Artifact URL: $ARTIFACT_URL"
+          echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
+
+      - name: Download Documentation Artifact
+        if: env.ARTIFACT_URL != ''
+        run: |
+          curl -L -o artifact.zip -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$ARTIFACT_URL"
+          mkdir docs
+          unzip artifact.zip -d docs
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
