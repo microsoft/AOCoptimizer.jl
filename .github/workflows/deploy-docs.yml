@@ -15,26 +15,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+        - name: Checkout Repository
+          uses: actions/checkout@v4
 
         - name: Get Latest Artifact URL
-        run: |
-          ARTIFACT_URL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" \
-            | jq -r '.artifacts[] | select(.name=="documentation-output") | .archive_download_url' | head -n 1)
-          echo "Artifact URL: $ARTIFACT_URL"
-          echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
+          run: |
+            ARTIFACT_URL=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/actions/artifacts" \
+                | jq -r '.artifacts[] | select(.name=="documentation-output") | .archive_download_url' | head -n 1)
+            echo "Artifact URL: $ARTIFACT_URL"
+            echo "ARTIFACT_URL=$ARTIFACT_URL" >> $GITHUB_ENV
 
-      - name: Download Documentation Artifact
-        if: env.ARTIFACT_URL != ''
-        run: |
-          curl -L -o artifact.zip -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$ARTIFACT_URL"
-          mkdir docs
-          unzip artifact.zip -d docs
+        - name: Download Documentation Artifact
+          if: env.ARTIFACT_URL != ''
+          run: |
+            curl -L -o artifact.zip -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$ARTIFACT_URL"
+            mkdir docs
+            unzip artifact.zip -d docs
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: docs
+        - name: Deploy to GitHub Pages
+          uses: JamesIves/github-pages-deploy-action@v4
+          with:
+            branch: gh-pages
+            folder: docs
