@@ -2,6 +2,10 @@
 
 using Documenter, AOCoptimizer
 
+include("compile_todos.jl")
+
+TodoHelper.create_todo_markdown()
+
 const _PAGES = [
     "Introduction" => [
         "index.md"
@@ -32,7 +36,8 @@ const _PAGES = [
     ],
     =#
     "Developer Docs" => [
-        "developer/developer.md"
+        "developer/developer.md",
+        "developer/TODOs.md",
     ],
     "Release notes" => "release_notes.md",
 ]

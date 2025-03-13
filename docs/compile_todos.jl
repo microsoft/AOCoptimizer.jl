@@ -5,6 +5,11 @@ Collect all the TODOs from the code base and add them
 to a markdown document in the developer folder.
 =#
 
+module TodoHelper
+
+using Compat
+
+@compat public create_todo_markdown
 
 function _source_code_root()
     """
@@ -27,49 +32,110 @@ function _source_code_root()
     return path
 end
 
+const _excluded_files = map(lowercase, [
+    "compile_todos.jl",
+    "Get-TodoItems.ps1",
+]) |> Set
+
 # DOES NOT WORK:
 function _find_all_files(path::String = _source_code_root())
-    files = []
+    to_examine = Vector{String}()
     for (root, _, files) in walkdir(path)
+        root = lowercase(root)
         if contains(root, ".git") || contains(root, "build")
             continue
         end
 
-        for file in files
-            if endswith(file, ".jl") || endswith(file, ".md") || endswith(file, ".ps1")
-                if file == "Get-TodoItems.ps1"
-                    continue
-                end
-                push!(files, joinpath(root, file))
-            end
-        end
+        files_to_add = filter(
+            x -> begin
+            x = lowercase(x)
+            (endswith(x, ".jl") || endswith(x, ".md") || endswith(x, ".ps1")) &&
+                x ∉ _excluded_files
+        end, files)
+
+        append!(to_examine, map(x -> joinpath(root,x), files_to_add))
     end
-    return files
+    return to_examine
 end
 
-_find_all_files()
+const _todos_re = r"TODO:\s*(?<header>[^\r\n]+)(?:\r?\n(?<body>(?:(?!\s*\r?\n).*\r?\n?)*)?)"
 
-function compile_todos(source::String, destination_folder::String, destination_file::String = "todos.md")
-    """
-    Compile all TODOs from the source code into a markdown document.
-    """
-    re = r"TODO:\s*(?<header>[^\r\n]+)(?:\r?\n(?<body>(?:(?!\s*\r?\n).*\r?\n?)*)?)"
-    # Read the source code
-    lines = readlines(source)
-
-    # Find all TODOs
-    todos = []
-    for (i, line) in enumerate(lines)
-        if occursin(r"#\s*TODO", line)
-            push!(todos, (i, line))
-        end
-    end
-
-    # Create a markdown document
-    md = "# TODOs\n\n"
-    for (i, line) in todos
-        md *= "## Line $i\n$line\n\n"
-    end
-
-    return md
+struct _TodoItems
+    filename::AbstractString
+    line::Int
+    offset::Int
+    header::AbstractString
+    body::AbstractString
 end
+
+function _find_todos(filename::AbstractString; canonical_file_name::Union{Nothing,AbstractString}=nothing)::Vector{_TodoItems}
+    todos = Vector{_TodoItems}()
+    lines = readlines(filename)
+    text = join(lines, "\n")
+
+    line_offsets = cumsum(length.(lines) .+ 1) # get the line number of each line
+
+    filename = canonical_file_name === nothing ? filename : canonical_file_name
+
+    for m in eachmatch(_todos_re, text)
+        header = m[:header]
+        body = haskey(m, :body) ? m[:body] : ""
+        line_number = findfirst(x -> x >= m.match.offset, line_offsets) + 1
+
+        push!(todos, _TodoItems(
+            filename, line_number, m.match.offset,
+            strip(header), strip(body),
+        ))
+    end
+
+    return todos
+end
+
+function _append_to_markdown(todos::Vector{_TodoItems}, io::IO=stdout)
+    """
+    Create a markdown file with all the TODOs in the code base.
+    """
+
+    for todo in todos
+        write(io, "- Title: **", todo.header, "**\n\n")
+        println(io, "  *Line ", todo.line, " of " , todo.filename, " [offset: ", todo.offset, "]*\n")
+        if todo.body != ""
+            write(io, "  Notes: ", todo.body, "\n")
+        end
+        write(io, "\n\n\n\n")
+    end
+end
+
+function _create_todo_markdown(path::String = _source_code_root(), io::IO=stdout)
+    """
+    Create a markdown file with all the TODOs in the code base.
+    """
+
+    write(io, "# TODOs\n\n")
+    inputs = _find_all_files(path)
+
+    common_path_chars = length(path)
+    for filename in inputs
+        todos = _find_todos(filename)
+        if isempty(todos)
+            continue
+        end
+
+        write(io, "## Filename: ", filename[common_path_chars+2:end], "\n\n")
+        _append_to_markdown(todos, io)
+    end
+end
+
+function create_todo_markdown(path::AbstractString = joinpath(_source_code_root(), "docs", "src", "developer", "TODOs.md"))
+    """
+    Create a markdown file with all the TODOs in the code base.
+    """
+
+    open(path, "w") do io
+        _create_todo_markdown(_source_code_root(), io)
+    end
+end
+
+create_todo_markdown()
+
+end # module
