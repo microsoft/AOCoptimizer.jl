@@ -63,6 +63,15 @@ After successful installation, you can use the package by loading it:
 using AOCoptimizer
 ```
 
+Unit tests should also work correctly (it may take a while to finish):
+
+```julia
+] test AOCoptimizer
+# or
+using Pkg
+Pkg.test("AOCoptimizer")
+```
+
 TODO: Add a simple example in the code above
 
 For more detailed installation instructions and related problems,

@@ -45,6 +45,15 @@ After successful installation, the following should work:
 using AOCoptimizer
 ```
 
+To further check the installation, run the following command (it may take a while to finish):
+
+```julia
+] test AOCoptimizer
+# or
+using Pkg
+Pkg.test("AOCoptimizer")
+```
+
 More details on installation and and basic usage can be found in the [docs](https://microsoft.github.io/AOCoptimizer.jl),
 in particular in the [installation](https://microsoft.github.io/AOCoptimizer.jl/dev/manual/installation/) and
 in the [example](https://microsoft.github.io/AOCoptimizer.jl/dev/tutorials/example/).
