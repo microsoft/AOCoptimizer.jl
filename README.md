@@ -54,7 +54,8 @@ using Pkg
 Pkg.test("AOCoptimizer")
 ```
 
-More details on installation and and basic usage can be found in the [docs](https://microsoft.github.io/AOCoptimizer.jl),
+More details on installation and basic usage can be found in the
+[docs](https://microsoft.github.io/AOCoptimizer.jl),
 in particular in the [installation](https://microsoft.github.io/AOCoptimizer.jl/dev/manual/installation/) and
 in the [example](https://microsoft.github.io/AOCoptimizer.jl/dev/tutorials/example/).
 
