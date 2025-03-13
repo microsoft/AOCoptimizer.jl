@@ -23,18 +23,18 @@ const _PAGES = [
     "API Reference" => [
         "reference/reference.md",
     ],
-    #=
     "Submodules" => [
-        "Utilities" => [
-            "Overview" => "submodules/Utilities/overview.md",
-            "API Reference" => "submodules/Utilities/reference.md",
+        "FileFormats" => [
+            # "Overview" => "submodules/Utilities/overview.md",
+            "API Reference" => "submodules/FileFormats/reference.md",
         ],
+        #=
         "Test" => [
             "Overview" => "submodules/Test/overview.md",
             "API Reference" => "submodules/Test/reference.md",
         ],
+        =#
     ],
-    =#
     "Developer Docs" => [
         "developer/developer.md",
         "developer/TODOs.md",

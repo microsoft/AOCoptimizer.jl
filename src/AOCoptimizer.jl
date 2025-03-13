@@ -30,6 +30,8 @@ include("runtime_utils.jl")
 include("qubo.jl")
 include("qumo.jl")
 
+include("FileFormats/FileFormats.jl")
+
 include("precompile.jl")
 
 end # module

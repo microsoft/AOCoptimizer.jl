@@ -14,9 +14,12 @@
         "mathengine",
         "nthreads",
         "nvars",
+        "parsefile",
         "prettyurls",
+        "PUBO",
         "QUBO",
         "QUMO",
+        "Rcdp",
         "reresolve",
         "sitename",
         "stdlib",
@@ -25,6 +28,5 @@
         "toplevel",
         "xchg",
         "Xoshiro"
-    ],
-    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\docs"
+    ]
 }
