@@ -1,4 +1,4 @@
-# Project
+# `AOCoptimizer.jl`
 
 The [Analog Optical Computer (AOC)](https://www.microsoft.com/en-us/research/project/aoc/) project is building
 an analog optical computer that has the potential to accelerate AI inference and hard optimization workloads by 100x.
@@ -24,7 +24,19 @@ make use of modern computing capabilities (GPU acceleration, vectorization, etc.
 to enable the exploration of the potential of analog optical computing for problems of non-trivial size.
 In their simplest form, they present an idealized (i.e., noise-free), scalable version of the AOC hardware.
 
-_TODO_: Add reference for citations
+To cite this work please use the following BibTeX entry (from the [arxiv](https://arxiv.org/abs/2304.12594) paper):
+
+```bibtex
+@online{kalinin2023aim,
+      title={Analog Iterative Machine (AIM): using light to solve quadratic optimization problems with mixed variables},
+      author={Kirill P. Kalinin and George Mourgias-Alexandris and Hitesh Ballani and Natalia G. Berloff and James H. Clegg and Daniel Cletheroe and Christos Gkantsidis and Istvan Haller and Vassily Lyutsarev and Francesca Parmigiani and Lucinda Pickup and Antony Rowstron},
+      year={2023},
+      eprint={2304.12594},
+      archivePrefix={arXiv},
+      primaryClass={cs.ET},
+      url={https://arxiv.org/abs/2304.12594},
+}
+```
 
 ## Getting started
 
