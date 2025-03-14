@@ -28,6 +28,10 @@ const _PAGES = [
             # "Overview" => "submodules/Utilities/overview.md",
             "API Reference" => "submodules/FileFormats/reference.md",
         ],
+        "Algorithms" => [
+            "Overview" => "submodules/Algorithms/overview.md",
+            "API Reference" => "submodules/Algorithms/reference.md",
+        ],
         #=
         "Test" => [
             "Overview" => "submodules/Test/overview.md",

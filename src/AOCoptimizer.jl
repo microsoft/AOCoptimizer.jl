@@ -17,6 +17,7 @@ using LinearAlgebra
 @compat public hamiltonian, graph_cut_from_hamiltonian
 
 @compat public FileFormats
+@compat public Algorithms
 
 """
     Direction
@@ -37,6 +38,7 @@ include("qumo.jl")
 include("metrics.jl")
 
 include("FileFormats/FileFormats.jl")
+include("Algorithms/Algorithms.jl")
 
 include("precompile.jl")
 
