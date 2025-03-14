@@ -7,6 +7,8 @@
         "Coptimizer",
         "CUDA",
         "deploydocs",
+        "Helmberg",
+        "Informationstechnik",
         "ising",
         "issymmetric",
         "Kirill",
@@ -20,6 +22,7 @@
         "QUBO",
         "QUMO",
         "Rcdp",
+        "Rendl",
         "reresolve",
         "sitename",
         "stdlib",
@@ -28,6 +31,9 @@
         "timedout",
         "toplevel",
         "xchg",
-        "Xoshiro"
+        "Xoshiro",
+        "Yinyu",
+        "Zentrum",
+        "Zuse"
     ]
 }
