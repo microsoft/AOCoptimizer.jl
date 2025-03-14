@@ -27,7 +27,7 @@ using ...AOCoptimizer: Direction, MINIMIZATION, MAXIMIZATION
 using ...AOCoptimizer: hamiltonian
 using ...AOCoptimizer: CancellationToken, is_cancelled
 
-@compat public search, search_qumo
+@compat public search, search_qumo, QuadraticMatrix
 
 #= Rule for making a heuristic swap:
     The common rule for making a swap is summarized in the code below:
@@ -234,6 +234,15 @@ end
 #= Below are methods externally visible
 =#
 
+"""
+    search(rng::AbstractRNG, matrix::AbstractMatrix{T}, ctx::CancellationToken)
+    search(seed::Integer, matrix::AbstractMatrix{T}, ctx::CancellationToken)
+    search(rng::AbstractRNG, matrix::AbstractMatrix{T}, field::AbstractVector{T}, ctx::CancellationToken)
+    search(seed::Integer, matrix::AbstractMatrix{T}, field::AbstractVector{T}, ctx::CancellationToken)
+
+Implement a simple heuristic that tries to solve *Ising* problems,
+by starting from a number of random solutions and sequentially trying to improve them using single flips.
+"""
 function search(
     rng::AbstractRNG,
     matrix::AbstractMatrix{T},
@@ -319,6 +328,15 @@ function _search_qumo_minimum(
     return min_energy, best
 end
 
+"""
+    search_qumo(rng::AbstractRNG, quadratic::QuadraticMatrix{T}, linear::AbstractVector{T}, ctx::CancellationToken)
+    search_qumo(seed::Integer, quadratic::QuadraticMatrix{T}, linear::AbstractVector{T}, ctx::CancellationToken)
+    search_qumo(rng::AbstractRNG, quadratic::QuadraticMatrix{T}, ctx::CancellationToken)
+    search_qumo(seed::Integer, quadratic::QuadraticMatrix{T}, ctx::CancellationToken)
+
+Implement a simple heuristic that tries to solve *QUMO* problems,
+by starting from a number of random solutions and sequentially trying to improve them using single flips.
+"""
 function search_qumo(
     seed::Integer,
     sense::Direction,
