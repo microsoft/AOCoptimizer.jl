@@ -25,6 +25,7 @@ The `matrix` is expected to be symmetric.
 
     We expect that the backend storage for `matrix` and `x` is the same.
     This is not checked.
+
 """
 function hamiltonian(
     matrix::AbstractMatrix,
@@ -61,16 +62,22 @@ end
 """
     graph_cut_from_hamiltonian(T::Type{<:Real}, graph::AbstractMatrix, hamiltonian::Real)
     graph_cut_from_hamiltonian(graph::AbstractMatrix, hamiltonian::Real)
-    graph_cut_from_hamiltonian(sum_of_graph_weights::Real, hamiltonian::Real)
+    graph_cut_from_hamiltonian(sum_of_matrix_weights::Real, hamiltonian::Real)
 
-Compute the cut of a graph (represented as a matrix `graph`, or by providing the `sum_of_graph_weights`)
+Compute the cut of a graph (represented as a matrix `graph`, or by providing the `sum_of_matrix_weights`)
 from its `hamiltonian` energy.
+
+!!! tip
+
+    If the initial object is a graph, then the `sum_of_matrix_weights` is
+    the double of the sum of the weights of the graph.
 
 !!! danger
 
-    In addition to assuming that the `graph` is symmetric (it is not checked), the computation
-    also assumes that the `hamiltonian` has been computed from the same graph and using
-    a vector assignment of `1` and `-1` values.
+    In addition to assuming that the `graph` is symmetric (it is not checked),
+    the computation also assumes that the `hamiltonian` has been computed
+    from the same graph and using a vector assignment of `1` and `-1` values.
+
 """
 function graph_cut_from_hamiltonian(
     T::Type{<:Real},
@@ -99,8 +106,8 @@ function graph_cut_from_hamiltonian(
     return result
 end
 
-function graph_cut_from_hamiltonian(sum_of_graph_weights::T, hamiltonian::T)::T where {T<:Real}
-    result = (sum_of_graph_weights / T(2) - hamiltonian) / T(2)
+function graph_cut_from_hamiltonian(sum_of_matrix_weights::T, hamiltonian::T)::T where {T<:Real}
+    result = (sum_of_matrix_weights / T(2) - hamiltonian) / T(2)
     if isnan(result)
         @warn "Failed to compute MaxCut from Hamiltonian due to overflow"
         throw(DomainError(result, "The result is NaN."))
