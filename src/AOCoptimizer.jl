@@ -9,9 +9,14 @@
 module AOCoptimizer
 
 using Compat
+using KernelAbstractions
+using LinearAlgebra
 
 @compat public Direction, MINIMIZATION, MAXIMIZATION
 @compat public CancellationToken, create_cancellation_token, is_cancelled, cancel!
+@compat public hamiltonian, graph_cut_from_hamiltonian
+
+@compat public FileFormats
 
 """
     Direction
@@ -29,6 +34,7 @@ include("threading.jl")
 include("runtime_utils.jl")
 include("qubo.jl")
 include("qumo.jl")
+include("metrics.jl")
 
 include("FileFormats/FileFormats.jl")
 
