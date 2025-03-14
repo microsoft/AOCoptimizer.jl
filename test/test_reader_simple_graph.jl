@@ -1,0 +1,83 @@
+#=
+test_reader_simple_graph.jl
+
+Unit tests for reading simple graph files.
+
+! It is not possible to run this file in isolation
+  This file requires the CodecBzip2 package which is a dependency in the test environment,
+  but not of the main package. Therefore, invocation of this file outside of the test
+  environment will fail, unless the CodecBzip2 package is installed in the global environment.
+
+=#
+
+module TestReaderSimpleGraph
+
+using Test
+using CodecBzip2
+using AOCoptimizer.FileFormats: FileNotFoundException, read_graph_matrix
+
+include("utils.jl")
+
+_gset_directory = joinpath(@__DIR__, "..", "data", "GSet")
+
+function _open_gset(process::Function, filename::AbstractString)
+    path = joinpath(_gset_directory, filename)
+    if isfile(path) == false
+        @error "File not found" filename
+        throw(FileNotFoundException(filename))
+    end
+
+    open(path) do file
+        if endswith(filename, ".bz2")
+            stream = Bzip2DecompressorStream(file)
+        else
+            stream = file
+        end
+        return process(stream)
+    end
+end
+
+function _read_gset_graph(filename::AbstractString)
+    return _open_gset(filename) do stream
+        return read_graph_matrix(stream)
+    end
+end
+
+@testset verbose=verbose "Simple graph reader tests" begin
+
+    @testset "Reading single topology - G1" begin
+        graph = _read_gset_graph("G1.bz2")
+        nodes, nodes_b = size(graph)
+        @test nodes == nodes_b
+        @test nodes == 800
+        @test sum(sum(graph)) == (2 * 19176)
+    end
+
+    @testset "Read all input files" begin
+        for filename in readdir(_gset_directory)
+            if startswith(filename, "G") == false
+                continue
+            end
+
+            @debug "Processing " filename
+            graph = _read_gset_graph(filename)
+            nodes, nodes_b = size(graph)
+            @test nodes > 0
+            @test nodes == nodes_b
+
+            _open_gset(filename) do f
+                header = strip(chomp(readline(f)))
+                fields = split(header)
+
+                @test length(fields) == 2
+                number_of_nodes = parse(Int, fields[1])
+                number_of_edges = parse(Int, fields[2])
+                @test number_of_nodes == nodes
+                @test number_of_edges > 0
+            end
+        end
+    end
+
+end
+
+end # module TestReaderSimpleGraph

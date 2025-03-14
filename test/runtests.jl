@@ -28,6 +28,7 @@ include("utils.jl")
     include("test_qubo.jl")
     include("test_qumo_mixed_ising.jl")
 
+    include("test_reader_simple_graph.jl")
 end
 
 if !disable_jet

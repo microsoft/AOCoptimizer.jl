@@ -14,6 +14,7 @@ SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [compat]
 Aqua = "0.8"
+CodecBzip2 = "0.8"
 Compat = "4"
 Dates = "1.11.0"
 JET = "0.9"
@@ -27,8 +28,9 @@ julia = "1"
 
 [extras]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+CodecBzip2 = "523fee87-0ab8-5b00-afb7-3ecf72e48cfd"
 JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Aqua", "JET", "Test"]
+test = ["Aqua", "CodecBzip2", "JET", "Test"]

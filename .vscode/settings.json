@@ -7,6 +7,7 @@
         "Coptimizer",
         "CUDA",
         "deploydocs",
+        "gset",
         "Helmberg",
         "Informationstechnik",
         "ising",
