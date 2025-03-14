@@ -20,25 +20,8 @@ include("utils.jl")
 
 _gset_directory = joinpath(@__DIR__, "..", "data", "GSet")
 
-function _open_gset(process::Function, filename::AbstractString)
-    path = joinpath(_gset_directory, filename)
-    if isfile(path) == false
-        @error "File not found" filename
-        throw(FileNotFoundException(filename))
-    end
-
-    open(path) do file
-        if endswith(filename, ".bz2")
-            stream = Bzip2DecompressorStream(file)
-        else
-            stream = file
-        end
-        return process(stream)
-    end
-end
-
 function _read_gset_graph(filename::AbstractString)
-    return _open_gset(filename) do stream
+    _process_input_file(_gset_directory, filename) do stream
         return read_graph_matrix(stream)
     end
 end
@@ -65,7 +48,7 @@ end
             @test nodes > 0
             @test nodes == nodes_b
 
-            _open_gset(filename) do f
+            _process_input_file(_gset_directory, filename) do f
                 header = strip(chomp(readline(f)))
                 fields = split(header)
 

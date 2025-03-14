@@ -42,7 +42,7 @@ const sparsity_rate = 0.2
 Metadata for QIO problems. Metadata include the following fields:
 - `Objective`: The objective value of the problem; this is the best known minimum or maximum value of the objective function.
 - `Instance`: The name of the instance; this can be used to identify the problem.
-- `Sense`: The optimization direction (minimization or maximization).
+- `Sense`: The optimization direction (MINIMIZATION or MAXIMIZATION).
 - `NumberOfTerms`: The number of terms in the problem.
 - `NumberOfInteractions`: The number of interactions in the problem.
 - `MaxDegree`: The maximum degree of the problem.
@@ -120,6 +120,14 @@ function _read_json_file(filename::AbstractString)::ProblemInfo
     end
 
     return JSON.parsefile(filename)
+end
+function _read_json_file(io::IO)::ProblemInfo
+    if eof(io)
+        @error "Reached end of stream before reading JSON; aborting operation"
+        throw(EOFError())
+    end
+
+    return JSON.parse(io)
 end
 
 function _read_terms_to_matrix(::Type{T}, problem::ProblemInfo) where {T<:Real}
@@ -253,22 +261,44 @@ end
 read_ising(filename::AbstractString)::Ising{Float64} = read_ising(Float64, filename)
 
 """
-    read(filename::AbstractString)::QIOProblem
+    read_qio(::Type{T}, filename::AbstractString)::QIOProblem where {T<:Real}
+    read_qio(filename::AbstractString)::QIOProblem
+    read_qio(::Type{T}, io::IO)::QIOProblem where {T<:Real}
+    read_qio(io::IO)::QIOProblem
 
-Read a QIO problem from a file with name `filename`.
+Read a QIO problem from a file with name `filename` or from an IO stream `io`.
+Optional type parameter `T` specifies the elementary type used in the the problem (e.g., Float64 or Float32).
 """
-function read(filename::AbstractString)::QIOProblem
+function read_qio(::Type{T}, filename::AbstractString)::QIOProblem  where {T<:Real}
     problem = _read_json_file(filename)
     problem_type = problem["type"]
     if problem_type == "pubo"
-        return _read_qubo(Float64, problem, filename)
+        return _read_qubo(T, problem, filename)
     elseif problem_type == "ising"
-        return _read_ising(Float64, problem, filename)
+        return _read_ising(T, problem, filename)
     else
         @error "Expecting PUBO or Ising type problem for $filename, got $problem_type; aborting"
         throw(QIOException("Invalid topology in `$filename`"))
     end
 end
+
+read_qio(filename::AbstractString)::QIOProblem = read_qio(Float64, filename)
+
+function read_qio(::Type{T}, io::IO)::QIOProblem where {T<:Real}
+    problem = _read_json_file(io)
+    problem_type = problem["type"]
+    if problem_type == "pubo"
+        return _read_qubo(T, problem, "<unknown>")
+    elseif problem_type == "ising"
+        return _read_ising(T, problem, "<unknown>")
+    else
+        @error "Expecting PUBO or Ising type problem, got $problem_type; aborting"
+        throw(QIOException("Invalid topology in stream"))
+    end
+end
+
+read_qio(io::IO)::QIOProblem = read_qio(Float64, io)
+
 
 """
     is_qubo(::QIOProblem) -> Bool

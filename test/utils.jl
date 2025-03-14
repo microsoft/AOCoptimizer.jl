@@ -25,3 +25,20 @@ if (@isdefined verbose) == false
         verbose = true
     end
 end
+
+function _process_input_file(process::Function, filepath::AbstractString, filename::AbstractString)
+    path = joinpath(filepath, filename)
+    if isfile(path) == false
+        @error "File not found" filepath filename
+        throw(FileNotFoundException(filename))
+    end
+
+    open(path) do file
+        if endswith(filename, ".bz2")
+            stream = Bzip2DecompressorStream(file)
+        else
+            stream = file
+        end
+        return process(stream)
+    end
+end
