@@ -8,20 +8,30 @@ DocTestFilters = [r"AOCoptimizer|AOC"]
 
 # Reference
 
+## Generic
+
 ```@docs
 AOCoptimizer
 ```
 
 ```@docs
-RuntimeUtils.run_for
+Direction
+```
+
+## Metrics
+
+```@docs
+hamiltonian
 ```
 
 ```@docs
-QUMO.mixed_ising
+graph_cut_from_hamiltonian
 ```
 
+## Multi-threading
+
 ```@docs
-QUBO._random
+CancellationToken
 ```
 
 ```@docs
@@ -29,39 +39,7 @@ RuntimeUtils.RuntimeException
 ```
 
 ```@docs
-QUBO.increase!
-```
-
-```@docs
-QUMO.qumo
-```
-
-```@docs
-Direction
-```
-
-```@docs
-QUBO.greedy_random
-```
-
-```@docs
-Base.isapprox
-```
-
-```@docs
 create_cancellation_token
-```
-
-```@docs
-QUBO.evaluate
-```
-
-```@docs
-QUBO.size
-```
-
-```@docs
-QUBO.qubo
 ```
 
 ```@docs
@@ -69,11 +47,59 @@ cancel!
 ```
 
 ```@docs
-QUMO.number_of_variables
+is_cancelled
 ```
 
 ```@docs
-is_cancelled
+RuntimeUtils.run_for
+```
+
+## QUBO
+
+```@docs
+QUBO.qubo
+```
+
+```@docs
+QUBO.size
+```
+
+```@docs
+QUBO.evaluate
+```
+
+```@docs
+QUBO._random
+```
+
+```@docs
+QUBO.greedy_random
+```
+
+```@docs
+QUBO.increase!
+```
+
+```@docs
+QUBO.decrease!
+```
+
+## QUMO
+
+```@docs
+QUMO.mixed_ising
+```
+
+```@docs
+QUMO.qumo
+```
+
+```@docs
+Base.isapprox
+```
+
+```@docs
+QUMO.number_of_variables
 ```
 
 ```@docs
@@ -85,15 +111,7 @@ QUMO.convert_positive_qumo_to_mixed_ising
 ```
 
 ```@docs
-CancellationToken
-```
-
-```@docs
 QUMO.convert_to_qumo
-```
-
-```@docs
-QUBO.decrease!
 ```
 
 ```@docs
