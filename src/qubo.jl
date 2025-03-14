@@ -52,8 +52,12 @@ However, it is important to adjust the weights of the diagonal elements to expre
 the function ``f_Q(x)``. Since ``w_{ij}=w_{ji}``, the interaction between the variables
 ``x_i`` and ``x_j`` (for ``i\\ne j``) is added twice in ``f_Q(x)``,
 once in the term ``w_{ij} x_i x_j`` and once in ``w_{ji} x_j x_i``.
-On the other hand there is a single term for the diagonal elements ``w_{ii} x_i^2 = w_{ii} x_i``.
-**Hence, it may be necessary to double the weights of the diagonal elements!.**
+On the other hand there is a single term for the diagonal elements ``w_{ii} x_i^2 = w_{ii} x_i.``
+
+!!! warning
+
+    Consider doubling the weights of the diagonal elements, if you want to encode an external field!
+
 """
 struct qubo{T<:Real}
     Sense::Direction
