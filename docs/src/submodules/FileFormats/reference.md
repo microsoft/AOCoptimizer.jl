@@ -50,7 +50,7 @@ QIO.QIOException
 ```
 
 ```@docs
-QIO.read
+QIO.read_qio
 ```
 
 ```@docs
