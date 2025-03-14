@@ -69,6 +69,11 @@ struct _TodoItems
 end
 
 function _find_todos(filename::AbstractString; canonical_file_name::Union{Nothing,AbstractString}=nothing)::Vector{_TodoItems}
+    if !isfile(filename)
+        @warn "File $filename does not exist; skipping."
+        return Vector{_TodoItems}()
+    end
+
     todos = Vector{_TodoItems}()
     lines = readlines(filename)
     text = join(lines, "\n")
