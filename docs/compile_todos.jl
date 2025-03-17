@@ -38,23 +38,23 @@ const _excluded_files = map(lowercase, [
     "Get-TodoItems.ps1",
 ]) |> Set
 
-# DOES NOT WORK:
 function _find_all_files(path::String = _source_code_root())
     to_examine = Vector{String}()
     for (root, _, files) in walkdir(path)
-        root = lowercase(root)
-        if contains(root, ".git") || contains(root, "build")
+        root_canonical = lowercase(root)
+        if contains(root_canonical, ".git") || contains(root_canonical, "build")
             continue
         end
 
         files_to_add = filter(
             x -> begin
             x = lowercase(x)
+
             (endswith(x, ".jl") || endswith(x, ".md") || endswith(x, ".ps1")) &&
                 x ∉ _excluded_files
         end, files)
 
-        append!(to_examine, map(x -> joinpath(root,x), files_to_add))
+        append!(to_examine, map(x -> joinpath(root, x), files_to_add))
     end
     return to_examine
 end
