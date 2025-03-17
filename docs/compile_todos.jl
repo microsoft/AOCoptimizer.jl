@@ -15,13 +15,14 @@ function _source_code_root()
     """
     Get all files in the given path.
     """
+    canonical_package_name = uppercase("AOCoptimizer.jl")
     path = nothing
     if isdefined(Base, :AOCoptimizer)
         path = dirname(Base.AOCoptimizer.__path__)
     else
         current = dirname(@__FILE__)
         previous = nothing
-        while current != "" && !endswith(current, "AOCoptimizer.jl") && current != previous
+        while current != "" && !endswith(uppercase(current), canonical_package_name) && current != previous
             previous = current
             current = dirname(current)
         end
