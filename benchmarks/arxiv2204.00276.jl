@@ -147,10 +147,6 @@ function write_sk_as_mps(io::IO, graph::AbstractMatrix; name::Union{Nothing,Abst
         i = term.first.index.value
         v = term.second
 
-        if v ≈ 0.0
-            continue
-        end
-
         @printf(io, "    X%-11d%-15s%f\n", i, "ENERGY", v)
     end
 
@@ -200,7 +196,6 @@ rng = Random.Xoshiro(seed)
 
 sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
 for graph_size in sizes
-    n = 5
     n = graph_size
 
     for repetition in 1:10
@@ -210,6 +205,7 @@ for graph_size in sizes
         file_name = joinpath(output_directory, "SK-$n-Xoshiro-$seed.mps")
         open(file_name, "w") do io
             write_sk_as_mps(io, graph; name="SK-$n-Xoshiro-$seed")
+            # write_sk_as_mps(stdout, graph)
         end
     end
 end
