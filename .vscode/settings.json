@@ -7,7 +7,10 @@
         "Coptimizer",
         "CUDA",
         "deploydocs",
+        "ENDATA",
+        "GRAPHCUT",
         "gset",
+        "Gurobi",
         "Helmberg",
         "Informationstechnik",
         "ising",
@@ -17,9 +20,11 @@
         "mathengine",
         "nthreads",
         "nvars",
+        "OBJSENSE",
         "parsefile",
         "prettyurls",
         "PUBO",
+        "QUADOBJ",
         "QUBO",
         "QUMO",
         "Rcdp",
@@ -31,10 +36,12 @@
         "Tidyverse",
         "timedout",
         "toplevel",
+        "triu",
         "xchg",
         "Xoshiro",
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ]
+    ],
+    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\benchmarks"
 }
