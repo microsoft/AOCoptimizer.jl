@@ -180,6 +180,8 @@ function write_sk_as_mps(io::IO, graph::AbstractMatrix; name::Union{Nothing,Abst
     println(io, "ENDATA")
 end
 
+mkdir(joinpath(output_directory, "problems"))
+
 seed = 1234
 rng = Random.Xoshiro(seed)
 sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
@@ -191,7 +193,7 @@ for graph_size in sizes
         seed = rand(rng, 1:1000000)
         graph = mk_cut(n, seed)
 
-        file_name = joinpath(output_directory, "MaxCut-$n-Xoshiro-$seed.mps")
+        file_name = joinpath(output_directory, "problems", "MaxCut-$n-Xoshiro-$seed.mps")
         open(file_name, "w") do io
             write_max_cut_as_mps(io, graph; name="MaxCut-$n-Xoshiro-$seed")
         end
@@ -203,7 +205,7 @@ rng = Random.Xoshiro(seed)
 
 orig_sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
 extra_sizes = [300; 400; 500; 600; 700; 800; 900; 1000]
-sizes = extra_sizes
+sizes = [orig_sizes;  extra_sizes]
 for graph_size in sizes
     n = graph_size
 
@@ -215,7 +217,7 @@ for graph_size in sizes
         =#
         graph = mk_sk(n, seed)
 
-        file_name = joinpath(output_directory, "SK-$n-Xoshiro-$seed.mps")
+        file_name = joinpath(output_directory, "problems", "SK-$n-Xoshiro-$seed.mps")
         open(file_name, "w") do io
             write_sk_as_mps(io, graph; name="SK-$n-Xoshiro-$seed")
             # write_sk_as_mps(stdout, graph)
