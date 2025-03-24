@@ -47,8 +47,6 @@ using AOCoptimizer
 output_directory = joinpath(@__DIR__, "..", "data", "arxiv2204.00276")
 mkpath(output_directory)
 
-sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
-
 function mk_sk(n::Int, rng::AbstractRNG)
     m = rand(rng, [-1, 1], n, n)
     # make lower triangular equal to upper triangular
@@ -90,6 +88,12 @@ function write_max_cut_as_mps(io::IO, graph::AbstractMatrix; name::Union{Nothing
 
     println(io, "ROWS")
     println(io, " N  GRAPHCUT")
+
+    #= Better to use JuMP to generate the model
+    m = Model()
+    @variable(m, x[1:n])
+    @objective(m, Max, sum(graph[i, j] * ( (1-x[j])*x[i] + (1-x[i])*x[j]) for i in 1:n for j in i+1:n if graph[i, j] != 0))
+    =#
 
     linear = zeros(n)
     for i in 1:n
@@ -151,7 +155,9 @@ function write_sk_as_mps(io::IO, graph::AbstractMatrix; name::Union{Nothing,Abst
     end
 
     println(io, "RHS")
-    @printf(io, "    %-12s%-15s%f\n", "OFFSET", "ENERGY", energy.aff.constant)
+    # from the manual: https://docs.gurobi.com/projects/optimizer/en/current/reference/fileformats/modelformats.html#formatmps
+    # You may define an objective offset by setting the *negative* offset as right-hand side of the objective row
+    @printf(io, "    %-12s%-15s%f\n", "OFFSET", "ENERGY", -energy.aff.constant)
 
     println(io, "BOUNDS")
     for i in 1:n
@@ -176,6 +182,7 @@ end
 
 seed = 1234
 rng = Random.Xoshiro(seed)
+sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
 
 for graph_size in sizes
     n = graph_size
@@ -194,12 +201,18 @@ end
 seed = 4321
 rng = Random.Xoshiro(seed)
 
-sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
+orig_sizes = [5; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90; 100; 110; 120; 130; 140; 150; 160; 170; 180; 190; 200]
+extra_sizes = [300; 400; 500; 600; 700; 800; 900; 1000]
+sizes = extra_sizes
 for graph_size in sizes
     n = graph_size
 
     for repetition in 1:10
         seed = rand(rng, 1:1000000)
+        #= Example input for debugging
+        seed = 102711
+        n = 5
+        =#
         graph = mk_sk(n, seed)
 
         file_name = joinpath(output_directory, "SK-$n-Xoshiro-$seed.mps")
@@ -209,3 +222,20 @@ for graph_size in sizes
         end
     end
 end
+
+
+function mk_dense_matrix(number_of_rows::Int, number_of_columns::Int, rows::AbstractVector{<:Int}, columns::AbstractVector{<:Int}, values::AbstractVector{T}) where T
+    @assert length(rows) == length(columns) == length(values)
+    @assert number_of_rows > 0 && number_of_columns > 0
+    @assert all(x -> x > 0 && x <= number_of_rows, rows)
+    @assert all(x -> x > 0 && x <= number_of_columns, columns)
+
+    matrix = zeros(T, number_of_rows, number_of_columns)
+    for i in eachindex(rows)
+        matrix[rows[i], columns[i]] = values[i]
+    end
+    return matrix
+end
+mk_dense_matrix(rows::AbstractVector, columns::AbstractVector, values::AbstractVector) =
+    mk_dense_matrix(maximum(rows), maximum(columns), rows, columns, values)
+
