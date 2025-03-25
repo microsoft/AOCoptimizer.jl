@@ -8,7 +8,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false)]
-    [string[]]$InputFile = @(Get-ChildItem -Path $PSScriptRoot -Filter "*.mps" | Select-Object -ExpandProperty FullName),
+    [string[]]$InputFile = @(Get-ChildItem -Path $PSScriptRoot\problems -Filter "*.mps" | Select-Object -ExpandProperty FullName),
 
     [Parameter(Mandatory = $false)]
     [ValidateRange(1)]
@@ -33,6 +33,7 @@ foreach ($file in $InputFile) {
         if ($Force) {
             Write-Warning -Message "Solution file already exists. Deleting $solutionPath."
             Remove-Item -Path $solutionPath -Force
+            Remove-Item -Path $logFilePath -Force
         } else {
             Write-Warning -Message "Solution file already exists. Skipping $fileName."
             continue
@@ -45,6 +46,10 @@ foreach ($file in $InputFile) {
     }
 
     gurobi_cl.exe ResultFile=$solutionPath JSONSolDetail=1 LogFile="$logFilePath" TimeLimit=$TimeLimit $file
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error -Message "Gurobi failed to process $fileName. Exit code: $LASTEXITCODE"
+        break
+    }
 
     if (-not (Test-Path $solutionPath)) {
         Write-Error -Message "Solution file $solutionPath not found for problem $fileName."

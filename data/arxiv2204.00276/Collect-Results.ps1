@@ -1,10 +1,10 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false)]
-    [string[]]$InputFile = @(Get-ChildItem -Path $PSScriptRoot -Filter "*.sol.json" | Select-Object -ExpandProperty FullName),
+    [string[]]$InputFile = @(Get-ChildItem -Path (Join-Path $PSScriptRoot -ChildPath "gurobi") -Filter "*.sol.json" | Select-Object -ExpandProperty FullName),
 
     [Parameter(Mandatory = $false)]
-    [string]$OutputFile = "results.csv"
+    [string]$OutputFile = "results-gurobi.csv"
 )
 
 $results = @()
