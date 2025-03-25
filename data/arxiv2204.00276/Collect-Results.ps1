@@ -17,26 +17,35 @@ foreach ($file in $InputFile) {
     $objective = $json.SolutionInfo.ObjVal
     $bound = $json.SolutionInfo.ObjBound
 
+    if ($graph.StartsWith("MaxCut-")) {
+        $metric = "GraphCut"
+    } elseif ($graph.StartsWith("SK-")) {
+        $metric = "Ising"
+    } else {
+        Write-Warning -Message "Unknown graph type: $graph; skipping."
+        continue
+    }
+
     if ($objective -eq $bound) {
         $results += [PSCustomObject]@{
             Graph = $graph;
             Size = $graph_size;
-            Metric = "GraphCut";
-            Property = "MaxCut";
+            Metric = $metric;
+            Property = "Best";
             Value = $objective
         }
     } else {
         $results += [PSCustomObject]@{
             Graph = $graph;
             Size = $graph_size;
-            Metric = "GraphCut";
+            Metric = $metric;
             Property = "Heuristic";
             Value = $objective
         }
         $results += [PSCustomObject]@{
             Graph = $graph;
             Size = $graph_size;
-            Metric = "GraphCut";
+            Metric = $metric;
             Property = "UpperBound";
             Value = $bound
         }
