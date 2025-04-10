@@ -1,8 +1,18 @@
 #=
 arxiv2204.00276.jl
 
-TODO: Description of the benchmark
+Instance generation for problems described in <https://arxiv.org/abs/2204.00276>
+("Ising machines as hardware solvers of combinatorial optimization problems"
+by Naeimeh Mohseni, Peter L. McMahon and Tim Byrnes).
 
+Here we generate instances for the SK and MaxCut problems;
+we do not generate instances for 3R3X or Logical-Planted/deceptive problems.
+The instances are written to MPS files. This is a simple format
+that can be read by Gurobi, in Julia and other solvers.
+
+We favor an approach of writing the problems in a file,
+so that there is a record of the exact problem generated.
+This is important for reproducibility.
 
 ## Graph generation
 
@@ -216,11 +226,11 @@ for graph_size in sizes
         n = 5
         =#
         graph = mk_sk(n, seed)
+        # write_sk_as_mps(stdout, graph)
 
         file_name = joinpath(output_directory, "problems", "SK-$n-Xoshiro-$seed.mps")
         open(file_name, "w") do io
             write_sk_as_mps(io, graph; name="SK-$n-Xoshiro-$seed")
-            # write_sk_as_mps(stdout, graph)
         end
     end
 end

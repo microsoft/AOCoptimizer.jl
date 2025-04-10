@@ -16,6 +16,7 @@
         "ising",
         "issymmetric",
         "Kirill",
+        "LASTEXITCODE",
         "makedocs",
         "mathengine",
         "nthreads",
@@ -42,6 +43,5 @@
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ],
-    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\benchmarks"
+    ]
 }
