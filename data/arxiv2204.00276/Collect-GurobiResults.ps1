@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+    Collects results from Gurobi solution files and generates a CSV report.
+
+.DESCRIPTION
+    This script processes Gurobi solution files in JSON format and extracts relevant information such as the graph name, size, metric, and objective values. It generates a CSV report summarizing the results.
+    The result found by Gurobi can be of two types. If the solution matched the upper bound,
+    then the solution is optimal, and it is recorded in the "Best" property. Otherwise, the
+    solution is a heuristic; in this case, we record both the heuristic value and the
+    upper bound in the "Heuristic" and "UpperBound" properties, respectively. Often, the
+    computed upper bound is quite loose. For the upper bound, we keep the entire value,
+    which may be a fractional number, even though the floor of that value would have been
+    a slightly better upper bound.
+#>
+
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $false)]
