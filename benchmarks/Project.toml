@@ -1,0 +1,12 @@
+[deps]
+AOCoptimizer = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+MathOptInterface = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
+QPSReader = "10f199a5-22af-520b-b891-7ce84a7b1bd0"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
+SCS = "c946c3f1-0d1f-5ce8-9dea-7daa1f7e2d13"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+
+[sources]
+AOCoptimizer = {path = ".."}
