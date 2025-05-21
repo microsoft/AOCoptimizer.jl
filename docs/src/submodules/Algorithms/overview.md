@@ -1,4 +1,3 @@
-<!-- markdownlint-disable MD041 -->
 ```@meta
 CurrentModule = AOCoptimizer.Algorithms
 DocTestSetup = quote
@@ -7,7 +6,6 @@ DocTestSetup = quote
 end
 DocTestFilters = [r"AOCoptimizer|AOC|Algos"]
 ```
-<!-- markdownlint-enable MD041 -->
 
 # AOCoptimizer.Algorithms
 
@@ -20,7 +18,7 @@ The algorithm evaluated starting points in parallel and (typically) executes
 for a specified time limit. The achieved solution can be used as the lowest baseline
 that any reasonable algorithm should be able to beat.
 
-A very simple example of how to use it is shown below:
+A simple example of how to use it is shown below:
 
 ```julia
 using AOCoptimizer: CancellationToken

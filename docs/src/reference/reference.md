@@ -1,4 +1,3 @@
-<!-- markdownlint-disable MD041 -->
 ```@meta
 CurrentModule = AOCoptimizer
 DocTestSetup = quote
@@ -6,7 +5,6 @@ DocTestSetup = quote
 end
 DocTestFilters = [r"AOCoptimizer|AOC"]
 ```
-<!-- markdownlint-enable MD041 -->
 
 # Reference
 
