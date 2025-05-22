@@ -9,7 +9,10 @@ Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
 NPZ = "15e1cf62-19b3-5cfa-8e77-841668bca605"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
+ProgressLogging = "33c8b6b6-d38a-422a-b730-caa89a2f386c"
 SnoopCompile = "aa65fe97-06da-5843-b5b1-d5d13cad87d2"
+TerminalLoggers = "5d786b92-1e48-4d6f-9151-6b4477ca9bed"
+YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [sources]
 AOCoptimizer = {path = ".."}

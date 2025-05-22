@@ -7,7 +7,7 @@ end
 DocTestFilters = [r"AOCoptimizer|AOC|FF"]
 ```
 
-# AOCoptimizer.FileFormats
+# `AOCoptimizer.FileFormats`
 
 ```@docs
 FileNotFoundException
@@ -27,7 +27,7 @@ read_graph_matrix
 read_directed_graph_matrix
 ```
 
-## QIO File Format
+## `QIO` file format
 
 ```@docs
 QIO.QIOProblem

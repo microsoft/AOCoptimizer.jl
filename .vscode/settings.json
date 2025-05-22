@@ -30,6 +30,7 @@
         "makedocs",
         "mathengine",
         "Mourgias",
+        "nargs",
         "nthreads",
         "nvars",
         "OBJSENSE",
@@ -57,5 +58,6 @@
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ]
+    ],
+    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\scripts"
 }
