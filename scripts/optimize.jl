@@ -71,7 +71,11 @@ function parse_commandline()
         arg_type = String
         default => ""
 
-        "graphs"
+        "--debug", "-d"
+        help = "Enable debug output"
+        action = :store_true
+
+        "inputs"
         help = "filenames to process"
         action = :store_arg
         nargs => '+'
@@ -104,7 +108,17 @@ function Base.show(io::IO, c::Configuration)
     print(io, "\tnumeric_type: ", c.numeric_type, "\n")
     print(io, "\tinput_format: ", c.input_format, "\n")
     print(io, "\tcommon_path: ", c.common_path, "\n")
-    print(io, "\tinputs: ", c.inputs, "\n")
+
+    if length(c.inputs) == 0
+        print(io, "\tinputs: <empty>\n")
+        return
+    else
+        print(io, "\tinputs:\n")
+
+        for input in c.inputs
+            print(io, "\t- ", input, "\n")
+        end
+    end
 end
 
 function _empty_configuration()
@@ -134,8 +148,15 @@ end
 function main()
     args = parse_commandline()
 
+    verbosity = Logging.Info
+    if args["debug"]
+        verbosity = Logging.Debug
+    end
+
     if args["progress"]
-        global_logger(TerminalLogger(right_justify = 120))
+        global_logger(TerminalLogger(stderr, verbosity; right_justify = 120))
+    else
+        global_logger(TerminalLogger(stderr, verbosity))
     end
 
     if isfile(args["config"])
@@ -199,11 +220,39 @@ function main()
         end
     end
 
-    println(config)
-    println()
-    configuration = _mk_configuration(config)
-    println(configuration)
+    if haskey(args, "inputs")
+        config["inputs"] = args["inputs"]
+    end
 
+    configuration = _mk_configuration(config)
+
+    @debug configuration
+
+    inputs = configuration.inputs
+
+    while !isempty(inputs)
+        input = inputs[1]
+        inputs = inputs[2:end]
+
+        input = joinpath(configuration.common_path, input)
+
+        if isdir(input)
+            files = readdir(input)
+            for file in files
+                push!(inputs, joinpath(input, file))
+            end
+            continue
+        end
+
+        if !isfile(input)
+            @error "Input file not found: $input; skipping"
+            continue
+        end
+
+        # Prepend common path to input file
+
+        @info "Processing input file: $input"
+    end
 end
 
 main()
