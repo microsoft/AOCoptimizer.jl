@@ -9,10 +9,26 @@ module Environment
 
 using CpuId
 using Compat
+using Pkg
 
 @compat public local_system_info
 
 function _get_cuda_info end
+
+function _get_package_version(package_name::String)::Union{VersionNumber, Nothing}
+    # Get the dependencies dictionary
+    deps = Pkg.dependencies()
+
+    # Find the package by name
+    for (_, pkg_info) in deps
+        if pkg_info.name == package_name
+            return pkg_info.version
+        end
+    end
+
+    # Return `nothing` if the package is not found
+    return nothing
+end
 
 """
     local_system_info()::Dict{String,Any}
@@ -43,6 +59,9 @@ function local_system_info()::Dict{String,Any}
     if isdefined(Main, :CUDA)
         local_system["cuda"] = _get_cuda_info()
     end
+
+    local_system["solver"] = Dict{String,Any}()
+    local_system["solver"]["version"] = _get_package_version("AOCoptimizer")
 
     return local_system
 end

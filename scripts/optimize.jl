@@ -14,6 +14,8 @@ using Random
 using TerminalLoggers
 using YAML
 
+using AOCoptimizer.Environment: local_system_info
+
 const _experiment_id = "f5c296b3-8d48-4865-8ea2-09d4eeebb674"
 
 function parse_commandline()
@@ -98,6 +100,8 @@ struct Configuration
 
     common_path::AbstractString
     inputs::Vector{AbstractString}
+
+    additional::Dict{String, Any}
 end
 
 function Base.show(io::IO, c::Configuration)
@@ -119,6 +123,14 @@ function Base.show(io::IO, c::Configuration)
             print(io, "\t- ", input, "\n")
         end
     end
+
+    if length(c.additional) > 0
+        print(io, "\tadditional:\n")
+
+        for (key, value) in c.additional
+            print(io, "\t- ", key, ": ", value, "\n")
+        end
+    end
 end
 
 function _empty_configuration()
@@ -130,10 +142,20 @@ function _empty_configuration()
         "input_format" => SimpleGraphFormat,
         "common_path" => "",
         "inputs" => [],
+        "additional" => Dict()
     )
 end
 
 function _mk_configuration(config::Dict)
+    conf = deepcopy(config)
+    delete!(conf, "seed")
+    delete!(conf, "timeout")
+    delete!(conf, "invert_weights")
+    delete!(conf, "numeric_type")
+    delete!(conf, "input_format")
+    delete!(conf, "common_path")
+    delete!(conf, "inputs")
+
     return Configuration(
         config["seed"],
         Dates.Second(config["timeout"]),
@@ -141,8 +163,31 @@ function _mk_configuration(config::Dict)
         config["numeric_type"],
         config["input_format"],
         config["common_path"],
-        config["inputs"]
+        config["inputs"],
+        conf
     )
+end
+
+function _process(configuration::Configuration, seed::UInt32, filename::AbstractString)
+    @assert isfile(filename) "File $filename does not exist"
+    @debug "Processing $filename with seed $seed"
+
+    stats = Dict(
+        "seed" => seed,
+        "filename" => filename,
+    )
+    started = now()
+
+    # TODO: Read input file and process; log result
+
+    ended = now()
+    elapsed = ended - started
+
+    stats["started"] = started
+    stats["ended"] = ended
+    stats["elapsed"] = elapsed
+
+    @debug "Processing $filename took $(Dates.seconds(elapsed)) seconds"
 end
 
 function main()
@@ -182,7 +227,7 @@ function main()
         end
     end
 
-    if haskey(args, "seed") && args["seed"] != nothing
+    if haskey(args, "seed") && args["seed"] !== nothing
         config["seed"] = args["seed"]
     end
 
@@ -228,7 +273,10 @@ function main()
 
     @debug configuration
 
+    environment = local_system_info()
     inputs = configuration.inputs
+
+    rng = Random.MersenneTwister(configuration.seed)
 
     while !isempty(inputs)
         input = inputs[1]
@@ -249,9 +297,9 @@ function main()
             continue
         end
 
-        # Prepend common path to input file
-
         @info "Processing input file: $input"
+        seed = rand(rng, UInt32)
+        _process(configuration, seed, input)
     end
 end
 
