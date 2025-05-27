@@ -179,6 +179,7 @@ function _process(configuration::Configuration, seed::UInt32, filename::Abstract
     started = now()
 
     # TODO: Read input file and process; log result
+    error("Processing of input files is not implemented yet")
 
     ended = now()
     elapsed = ended - started
