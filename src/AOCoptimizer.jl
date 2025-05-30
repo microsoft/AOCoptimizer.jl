@@ -36,6 +36,7 @@ include("runtime_utils.jl")
 include("qubo.jl")
 include("qumo.jl")
 include("metrics.jl")
+include("environment.jl")
 
 include("FileFormats/FileFormats.jl")
 include("Algorithms/Algorithms.jl")
