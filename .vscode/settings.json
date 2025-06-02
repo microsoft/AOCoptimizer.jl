@@ -44,6 +44,8 @@
         "Mourgias",
         "Naeimeh",
         "nargs",
+        "nblocks",
+        "ndrange",
         "nthreads",
         "nvars",
         "NVML",

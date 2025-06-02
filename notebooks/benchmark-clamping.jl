@@ -17,6 +17,7 @@ using Dates
 using KernelAbstractions
 using JSON
 using AOCoptimizer.Environment: local_system_info
+using AOCoptimizer
 
 CUDA.allowscalar(false)
 
@@ -25,9 +26,9 @@ CUDA.allowscalar(false)
 
 
 @inline function enforce_inelastic_wall!(
-    x::AbstractArray{T,N};
-    limit = T(1.0),
+    x::AbstractArray{T,N}
 ) where {T<:Real,N}
+    limit = T(1.0)
     @simd for index in range(1, length = length(x))
         @inbounds if x[index] > limit
             x[index] = limit
@@ -39,11 +40,11 @@ end
 
 @inline function enforce_inelastic_wall!(
     y::AbstractArray{T,N},
-    x::AbstractArray{T,N};
-    limit = T(1.0),
+    x::AbstractArray{T,N}
 ) where {T<:Real,N}
     @assert length(x) == length(y)
 
+    limit = T(1.0)
     @simd for index in range(1, length = length(x))
         @inbounds if x[index] > limit
             x[index] = limit
@@ -56,9 +57,9 @@ end
 end
 
 @kernel function enforce_inelastic_wall_kernel!(
-    x::AbstractArray{T,N},
-    limit = T(1.0),
+    x::AbstractArray{T,N}
 ) where {T<:Real,N}
+    limit = T(1.0)
     I = @index(Global)
     @inbounds begin
         if x[I] > limit
@@ -71,9 +72,9 @@ end
 
 @kernel function enforce_inelastic_wall_kernel!(
     x::AbstractArray{T,N},
-    y::AbstractArray{T,N},
-    limit = T(1.0),
+    y::AbstractArray{T,N}
 ) where {T<:Real,N}
+    limit = T(1.0)
     I = @index(Global)
     @inbounds begin
         if x[I] > limit
@@ -87,20 +88,18 @@ end
 end
 
 function enforce_inelastic_wall_with_kernel!(
-    x::AbstractArray{T,N};
-    limit = T(1.0),
+    x::AbstractArray{T,N}
 ) where {T<:Real,N}
     backend = get_backend(x)
     kernel = enforce_inelastic_wall_kernel!(backend)
-    kernel(x, limit, ndrange = size(x))
+    kernel(x, ndrange = size(x))
     synchronize(backend)
     return
 end
 
 function enforce_inelastic_wall_with_kernel!(
     x::AbstractArray{T,N},
-    y::AbstractArray{T,N};
-    limit = T(1.0),
+    y::AbstractArray{T,N}
 ) where {T<:Real,N}
     @assert length(x) == length(y)
 
@@ -108,7 +107,7 @@ function enforce_inelastic_wall_with_kernel!(
     @assert get_backend(y) == backend
 
     kernel = enforce_inelastic_wall_kernel!(backend)
-    kernel(x, y, limit, ndrange = size(x))
+    kernel(x, y, ndrange = size(x))
     synchronize(backend)
     return
 end
@@ -116,8 +115,8 @@ end
 @inline function combine_clamp!(
     y::AbstractArray{T,N},
     x::AbstractArray{T,N};
-    limit = T(1.0),
 ) where {T<:Real,N}
+    limit = T(1.0)
     r = range(1, length(x))
     @. y[r] = ifelse(x[r] > limit, zero(T), ifelse(x[r] < -limit, zero(T), y[r]))
     clamp!(x, -limit, limit)
@@ -154,6 +153,16 @@ cpu_y = rand(T, matrix_size, experiments);
 # on the CPU.
 @benchmark enforce_inelastic_wall_with_kernel!(cpu_x)
 
+# ### Implementation in the code
+# The default implementation
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall!(cpu_x, Float32(1.0), Float32(-1.0))
+
+# The Ising shortcut to the walls
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_ising!(cpu_x)
+
+# The binary shortcut to the walls
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_binary!(cpu_x)
+
 # ### Two arrays: the inelastic wall implementation with clamp
 @benchmark combine_clamp!(cpu_x, cpu_y)
 
@@ -163,6 +172,16 @@ cpu_y = rand(T, matrix_size, experiments);
 # ### Two arrays: the inelastic wall implementation with a kernel
 @benchmark enforce_inelastic_wall_with_kernel!(cpu_x, cpu_y)
 
+# ### Implementation in the code
+# The default implementation
+
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall!(cpu_x, cpu_y, Float32(1.0), Float32(-1.0))
+
+# The Ising shortcut to the walls
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_ising!(cpu_x, cpu_y)
+
+# The binary shortcut to the walls
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_binary!(cpu_x, cpu_y)
 
 # ## GPU based implementations
 
@@ -170,12 +189,12 @@ const _MAX_THREADS_PER_BLOCK =
     CUDA.attribute(CUDA.device(), CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
 
 @inline function enforce_inelastic_wall!(
-    x::CUDA.CuArray{T,N};
-    limit = T(1.0),
-    nthreads::Integer = _MAX_THREADS_PER_BLOCK,
+    x::CUDA.CuArray{T,N}
 ) where {T<:Real,N}
-
+    limit = T(1.0)
     lx = length(x)
+
+    nthreads = _MAX_THREADS_PER_BLOCK
 
     function check_and_set!()
         index = (CUDA.blockIdx().x - 1) * CUDA.blockDim().x +
@@ -206,12 +225,13 @@ end
 
 @inline function enforce_inelastic_wall!(
     y::CUDA.CuArray{T,N},
-    x::CUDA.CuArray{T,N};
-    limit = T(1.0),
-    nthreads::Integer = _MAX_THREADS_PER_BLOCK,
+    x::CUDA.CuArray{T,N}
 ) where {T<:Real,N}
     @assert length(x) == length(y)
 
+    nthreads = _MAX_THREADS_PER_BLOCK
+
+    limit = T(1.0)
     lx = length(x)
 
     function check_and_set!()
@@ -249,25 +269,26 @@ end
     end
 end
 
-function maptrim!(x::CUDA.CuArray{T,N}) where {T<:Real} where {N}
+function map_trim!(x::CUDA.CuArray{T,N}) where {T<:Real} where {N}
     map!(trim, x, x)
     return nothing
 end
 
-function maptrim!(x::CUDA.CuDeviceArray{T,1}) where {T<:Real}
+function map_trim!(x::CUDA.CuDeviceArray{T,1}) where {T<:Real}
     map!(trim, x, x)
     return nothing
 end
 
-function myclamp!(
-    A::CUDA.CuArray, B::CUDA.CuArray,
-    low, high,
-    nthreads::Integer=_MAX_THREADS_PER_BLOCK
-)
+function my_clamp!(
+    A::CUDA.CuArray{T,N}, B::CUDA.CuArray{T,N}
+) where {T<:Real,N}
     @assert length(A) == length(B)
     @assert eltype(A) == eltype(B)
 
-    z = convert(eltype(B), 0.0)
+    nthreads::Integer=_MAX_THREADS_PER_BLOCK
+
+    low = T(-1.0)
+    high = T(1.0)
     lx = length(A)
 
     function check_and_set!()
@@ -278,8 +299,8 @@ function myclamp!(
         end
 
         @inbounds B[index] = ifelse(A[index] > high,
-                                    z,
-                                    ifelse(A[index] < low, z, B[index]))
+                                    T(0.0),
+                                    ifelse(A[index] < low, T(0.0), B[index]))
         @inbounds A[index] = clamp(A[index], low, high)
 
         return
@@ -310,9 +331,9 @@ CUDA.@bprofile begin
     CUDA.synchronize()
 end
 
-# ### Custom implementation using the maptrim! function
+# ### Custom implementation using the map_trim! function
 CUDA.@bprofile begin
-    maptrim!(gpu_x)
+    map_trim!(gpu_x)
     CUDA.synchronize()
 end
 
@@ -327,6 +348,26 @@ end
 # (observe: no need to synchronize, as we do so in the function)
 CUDA.@bprofile enforce_inelastic_wall_with_kernel!(gpu_x)
 
+# ### Implementation in the code
+# The default implementation
+CUDA.@bprofile begin
+    AOCoptimizer.Solver.enforce_inelastic_wall!(gpu_x, Float32(1.0), Float32(-1.0))
+    CUDA.synchronize()
+end
+
+# The Ising shortcut to the walls
+CUDA.@bprofile begin
+    AOCoptimizer.Solver.enforce_inelastic_wall_ising!(gpu_x)
+    CUDA.synchronize()
+end
+
+# The binary shortcut to the walls
+CUDA.@bprofile begin
+    AOCoptimizer.Solver.enforce_inelastic_wall_binary!(gpu_x)
+    CUDA.synchronize()
+end
+
+
 # ### Two arrays: default implementation
 CUDA.@bprofile begin
     enforce_inelastic_wall!(gpu_x, gpu_y)
@@ -335,7 +376,7 @@ end
 
 # ### Two arrays using clamp!
 CUDA.@bprofile begin
-    myclamp!(gpu_x, gpu_y, T(-1.0), T(1.0))
+    my_clamp!(gpu_x, gpu_y)
     CUDA.synchronize()
 end
 
@@ -343,6 +384,25 @@ end
 #
 # (observe: no need to synchronize, as we do so in the function)
 CUDA.@bprofile enforce_inelastic_wall_with_kernel!(gpu_x, gpu_y)
+
+# ### Two arrays: implementation in code
+# The default implementation
+CUDA.@bprofile begin
+    AOCoptimizer.Solver.enforce_inelastic_wall!(gpu_x, gpu_y, Float32(1.0), Float32(-1.0))
+    CUDA.synchronize()
+end
+
+# The Ising shortcut to the walls
+CUDA.@bprofile begin
+    AOCoptimizer.Solver.enforce_inelastic_wall_ising!(gpu_x, gpu_y)
+    CUDA.synchronize()
+end
+
+# The binary shortcut to the walls
+CUDA.@bprofile begin
+    AOCoptimizer.Solver.enforce_inelastic_wall_binary!(gpu_x, gpu_y)
+    CUDA.synchronize()
+end
 
 # ## Examine generated code
 
