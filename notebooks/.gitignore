@@ -1,0 +1,7 @@
+Manifest.toml
+*.tex
+*.qmd
+*.pdf
+*.log
+*.aux
+*.quarto_ipynb

@@ -1,11 +1,13 @@
 {
     "cSpell.words": [
         "Alexandris",
+        "allowscalar",
         "atol",
         "Ballani",
         "Berloff",
         "bibtex",
         "binarization",
+        "bprofile",
         "Byrnes",
         "checkdocs",
         "Cletheroe",
@@ -42,6 +44,8 @@
         "Mourgias",
         "Naeimeh",
         "nargs",
+        "nblocks",
+        "ndrange",
         "nthreads",
         "nvars",
         "NVML",
@@ -72,5 +76,5 @@
         "Zentrum",
         "Zuse"
     ],
-    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\benchmarks"
+    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\notebooks"
 }

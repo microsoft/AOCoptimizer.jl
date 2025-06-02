@@ -41,6 +41,8 @@ include("environment.jl")
 include("FileFormats/FileFormats.jl")
 include("Algorithms/Algorithms.jl")
 
+include("Solver/Solver.jl")
+
 include("precompile.jl")
 
 end # module
