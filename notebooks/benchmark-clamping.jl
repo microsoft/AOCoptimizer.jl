@@ -413,7 +413,7 @@ CUDA.@device_code_sass enforce_inelastic_wall_with_kernel!(gpu_x)
 
 CUDA.@device_code_sass enforce_inelastic_wall!(gpu_x)
 
-CUDA.@device_code_sass maptrim!(gpu_x)
+CUDA.@device_code_sass map_trim!(gpu_x)
 
 CUDA.@device_code_sass (clamp!(x, T(-1.0), T(1.0)))
 

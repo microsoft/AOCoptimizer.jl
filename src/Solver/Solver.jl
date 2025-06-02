@@ -11,7 +11,9 @@ using KernelAbstractions
 
 @compat public @make_wall, enforce_inelastic_wall!
 @compat public enforce_inelastic_wall_ising!, enforce_inelastic_wall_binary!
+@compat public calculate_energies!, calculate_energies
 
 include("walls.jl")
+include("stats.jl")
 
 end # module
