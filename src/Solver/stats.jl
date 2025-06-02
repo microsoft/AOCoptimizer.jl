@@ -34,6 +34,18 @@ function count_min_energy_hits(
     return vec(count(≈(best_energy), observations; dims = 1))
 end
 
+"""
+    calculate_energies!(
+        energies::AbstractVector{TEval},
+        spins::AbstractMatrix{T},
+        matrix::AbstractMatrix{TEval},
+        external::Union{Nothing,AbstractVector{TEval}},
+    ) where {T<:Real,TEval<:Real}
+
+Calculate the energies for each configuration given the `spins`, the interaction `matrix`
+and an optional `external` field.
+The `energies` vector is modified in place to hold the computed energies.
+"""
 function calculate_energies!(
     energies::AbstractVector{TEval},
     spins::AbstractMatrix{T},
@@ -56,6 +68,17 @@ function calculate_energies!(
     return nothing
 end
 
+"""
+    calculate_energies(
+        spins::AbstractMatrix{T},
+        matrix::AbstractMatrix{TEval},
+        external::Union{Nothing,AbstractVector{TEval}},
+    )::AbstractVector{TEval} where {T<:Real,TEval<:Real}
+
+Calculate the energies for each configuration given the `spins`, the interaction `matrix`
+and an optional `external` field.
+The result is returned as a new vector of energies.
+"""
 function calculate_energies(
     spins::AbstractMatrix{T},
     matrix::AbstractMatrix{TEval},

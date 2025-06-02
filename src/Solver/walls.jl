@@ -115,12 +115,26 @@ end
     return nothing
 end
 
+"""
+    enforce_inelastic_wall!(x::AbstractArray{T,N}, upper::T, lower::T) where {T<:Real,N}
+    enforce_inelastic_wall!(x::AbstractArray{T,N}, y::AbstractArray{T,N}, upper::T, lower::T) where {T<:Real,N}
+
+Enforces that the elements of `x` are within the specified `lower` and `upper` bounds.
+If `y` is provided, it is modified to zero for the corresponding elements for which
+`x` exceeds the bounds.
+"""
 @inline enforce_inelastic_wall!(x::AbstractArray{T,N}, upper::T, lower::T) where {T<:Real,N} =
     _enforce_inelastic_wall!(get_backend(x), x, upper, lower)
 @inline enforce_inelastic_wall!(x::AbstractArray{T,N}, y::AbstractArray{T,N}, upper::T, lower::T) where {T<:Real,N} =
     _enforce_inelastic_wall!(get_backend(x), x, y, upper, lower)
 
 
+"""
+    @make_wall(name, lower, upper)
+
+Creates functions that enforce an inelastic wall
+for a given `name`, with specified `lower` and `upper` bounds.
+"""
 macro make_wall(name, lower, upper)
     @assert lower <= upper "Lower bound must be less than or equal to upper bound"
 
