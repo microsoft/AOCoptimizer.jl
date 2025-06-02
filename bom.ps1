@@ -42,7 +42,7 @@ param(
 Push-Location -Path $PSScriptRoot
 $rootDir = Join-Path -Path $PSScriptRoot -ChildPath "scripts"
 
-# We need to update here to capture the latest version of SAIM
+# We need to update here to capture the latest version of the solver
 julia --project=$rootDir -e "using Pkg; Pkg.update()"
 
 if($All) {

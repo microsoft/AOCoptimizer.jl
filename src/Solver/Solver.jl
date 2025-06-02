@@ -13,5 +13,6 @@ using KernelAbstractions
 @compat public enforce_inelastic_wall_ising!, enforce_inelastic_wall_binary!
 
 include("walls.jl")
+include("stats.jl")
 
 end # module
