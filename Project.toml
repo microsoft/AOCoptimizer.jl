@@ -4,6 +4,8 @@ authors = ["Kirill Kalinin <kkalinin@microsoft.com>", "Christos Gkantsidis <chri
 version = "0.1.0"
 
 [deps]
+Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
+BFloat16s = "ab4f0b2a-ad5b-11e8-123f-65d77653426b"
 Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
 CpuId = "adafc99b-e345-5852-983c-f28acb93d879"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
@@ -24,7 +26,9 @@ CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
 CUDAExt = "CUDA"
 
 [compat]
+Adapt = "4.3.0"
 Aqua = "0.8"
+BFloat16s = "0.5.1"
 CUDA = "5"
 CodecBzip2 = "0.8"
 Compat = "4"
