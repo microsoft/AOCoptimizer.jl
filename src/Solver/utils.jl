@@ -12,4 +12,7 @@ Should not be called directly.
 Best effort conversion of `x` to the specified `backend`.
 """
 
+abstract type BackendExtension end
+struct BackendCuda <: BackendExtension end
+
 _to_cpu(x) = Adapt.adapt(CPU(), x)

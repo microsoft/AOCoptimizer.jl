@@ -45,4 +45,6 @@ include("Solver/Solver.jl")
 
 include("precompile.jl")
 
+include("init.jl")
+
 end # module

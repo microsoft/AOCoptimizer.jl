@@ -20,6 +20,7 @@ using AOCoptimizer.Environment: local_system_info
 using AOCoptimizer
 
 CUDA.allowscalar(false)
+AOCoptimizer.init()
 
 #nb # %% A slide [markdown] {"slideshow": {"slide_type": "slide"}}
 # ## CPU based implementation

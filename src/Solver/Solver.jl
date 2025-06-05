@@ -9,14 +9,19 @@ module Solver
 using Adapt
 using BFloat16s
 using Compat
+using Distributions
 using KernelAbstractions
 using LinearAlgebra
+using Printf
+using Random
 using SparseArrays
 
 @compat public @make_wall, enforce_inelastic_wall!
 @compat public enforce_inelastic_wall_ising!, enforce_inelastic_wall_binary!
 @compat public calculate_energies!, calculate_energies
 @compat public Problem
+@compat public Setup, make_empty_setup, make_setup
+@compat public Workspace, make_workspace, initialize_workspace
 
 """
     TEnergyObservations{T<:Number}
@@ -30,5 +35,9 @@ include("utils.jl")
 include("walls.jl")
 include("stats.jl")
 include("problem.jl")
+include("setup.jl")
+include("workspace.jl")
+
+include("non_linearity.jl")
 
 end # module

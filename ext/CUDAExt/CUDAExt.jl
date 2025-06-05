@@ -13,7 +13,7 @@ import AOCoptimizer
 import AOCoptimizer.Environment
 import AOCoptimizer.Solver
 
-using CUDA: CuArray, CuVector, NVML, CUDABackend
+using CUDA: CuArray, CuVector, NVML, CUDABackend, @cuda, has_cuda
 
 """
     _get_cuda_info()::Dict{String,Any}
@@ -21,7 +21,7 @@ using CUDA: CuArray, CuVector, NVML, CUDABackend
 Get information about the CUDA environment, if available.
 """
 function AOCoptimizer.Environment._get_cuda_info()::Dict{String,Any}
-    if !CUDA.has_cuda()
+    if !has_cuda()
         @warn "CUDA is installed but it is not available"
         return Dict{String,Any}()
     end
@@ -96,7 +96,7 @@ function AOCoptimizer.Solver._enforce_inelastic_wall!(
     device = CUDA.device(x)
     nthreads = CUDA.attribute(device, CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
     nblocks = cld(lx, nthreads)
-    CUDA.@cuda threads=nthreads blocks=nblocks check_and_set!()
+    @cuda threads=nthreads blocks=nblocks check_and_set!()
     return nothing
 end
 
@@ -133,8 +133,10 @@ function AOCoptimizer.Solver._enforce_inelastic_wall!(
     device = CUDA.device(x)
     nthreads = CUDA.attribute(device, CUDA.DEVICE_ATTRIBUTE_MAX_THREADS_PER_BLOCK)
     nblocks = cld(lx, nthreads)
-    CUDA.@cuda threads=nthreads blocks=nblocks check_and_set!()
+    @cuda threads=nthreads blocks=nblocks check_and_set!()
     return nothing
 end
+
+include("non_linearity.jl")
 
 end # module CUDAExt
