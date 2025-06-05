@@ -24,6 +24,15 @@ function _cuda_non_linearity_extension_code(::BackendExtension, fn_name, fn)
     return Expr(:block)  # default empty block
 end
 
+"""
+    @make_non_linearity(name, fn)
+
+Macro to create a non-linearity function that applies
+the function `fn` element-wise to an array `x`.
+
+Where supported, it will generate optimized code for
+specific backends (e.g., CUDA).
+"""
 macro make_non_linearity(
     # Name of the generated function
     name::AbstractString,
@@ -123,31 +132,31 @@ function __register_non_linearities()
 end
 
 """
-    _non_linearity_sign!(x::AbstractArray{T,N}) where {T<:Real,N}
+    non_linearity_sign!(x::AbstractArray{T,N}) where {T<:Real,N}
 
 In-place application of the sign function element-wise to the array `x`.
 """
-function _non_linearity_sign! end
+function non_linearity_sign! end
 
 """
-    _non_linearity_tanh!(x::AbstractArray{T,N}) where {T<:Real,N}
+    non_linearity_tanh!(x::AbstractArray{T,N}) where {T<:Real,N}
 
 In-place application of the sign function element-wise to the array `x`.
 """
-function _non_linearity_tanh! end
+function non_linearity_tanh! end
 
 """
-    _non_linearity_binary!(x::AbstractArray{T,N}) where {T<:Real,N}
+    non_linearity_binary!(x::AbstractArray{T,N}) where {T<:Real,N}
 
 In-place application of the function `x -> (x>0.5)?1.0:0.0`
 element-wise to the array `x`.
 """
-function _non_linearity_binary! end
+function non_linearity_binary! end
 
-push!(__NON_LINEARITIES, ("_non_linearity_sign", sign))
-push!(__NON_LINEARITIES, ("_non_linearity_tanh", tanh))
+push!(__NON_LINEARITIES, ("non_linearity_sign", sign))
+push!(__NON_LINEARITIES, ("non_linearity_tanh", tanh))
 
-push!(__NON_LINEARITIES, ("_non_linearity_binary", x -> begin
+push!(__NON_LINEARITIES, ("non_linearity_binary", x -> begin
     if (x > 0.5)
         one(x)
     else
