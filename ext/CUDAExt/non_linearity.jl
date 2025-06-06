@@ -42,7 +42,7 @@ function AOCoptimizer.Solver._cuda_non_linearity_extension_code(::AOCoptimizer.S
             function check_and_set!()
                 index = (CuBlockIdx().x - 1) * CuBlockDim().x + CuThreadIdx().x
                 if index > lx return nothing end
-                @inbounds binaries[index] = $fn(binaries[index])
+                @inbounds binaries[index] = $(esc(fn))(binaries[index])
                 return nothing
             end
 

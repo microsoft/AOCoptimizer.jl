@@ -326,8 +326,114 @@ macro make_sampler(
 
 end # macro
 
+"""
+    sampler!(
+        problem::Problem{T, TEval},
+        setup::Setup{T},
+        workspace::Workspace{T},
+        iterations::Integer,
+        annealing_delta::AbstractVector{T},
+        per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing
+    ) where {T<:Real, TEval<:Real, TIterationCallbackState}
+
+Sampler for mixed Ising problems.
+Arguments include:
+
+- `problem` contains the input problem. The related matrices will not change.
+   The computation will be performed using the `T` elementary data-type, but
+   the evaluation of the energies will be performed using the `TEval` data-type.
+
+- `setup` contains the setup parameters, such as the gradient, momentum, and dt.
+   This will not change during the sampling process.
+
+- `workspace` contains caller-provided scratch buffers that will be used to
+  perform the sampling. This buffers will change during the sampling process,
+  but the caller should not depend on the values in them after the sampling is done.
+
+- `iterations` is the number of iterations to perform.
+
+- `annealing_delta` is a vector of the annealing factor values to use.
+  This vector will change during the sampling process, and at the end
+  it will typically contain zeros.
+
+- `per_iteration_callback_state` is an optional state that will be passed to the
+  per-iteration callback function, if it is provided. This state can be used to
+  collect statistics or to perform other actions at the end of each iteration.
+"""
 function sampler! end
+
+"""
+    sampler_binary!(
+        problem::Problem{T, TEval},
+        setup::Setup{T},
+        workspace::Workspace{T},
+        iterations::Integer,
+        annealing_delta::AbstractVector{T},
+        per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing
+    ) where {T<:Real, TEval<:Real, TIterationCallbackState}
+
+Sampler for mixed positive QUMO problems, where the binaries are `{0, 1}` and
+the continuous in `[0, 1]`.
+Arguments include:
+
+- `problem` contains the input problem. The related matrices will not change.
+   The computation will be performed using the `T` elementary data-type, but
+   the evaluation of the energies will be performed using the `TEval` data-type.
+
+- `setup` contains the setup parameters, such as the gradient, momentum, and dt.
+   This will not change during the sampling process.
+
+- `workspace` contains caller-provided scratch buffers that will be used to
+  perform the sampling. This buffers will change during the sampling process,
+  but the caller should not depend on the values in them after the sampling is done.
+
+- `iterations` is the number of iterations to perform.
+
+- `annealing_delta` is a vector of the annealing factor values to use.
+  This vector will change during the sampling process, and at the end
+  it will typically contain zeros.
+
+- `per_iteration_callback_state` is an optional state that will be passed to the
+  per-iteration callback function, if it is provided. This state can be used to
+  collect statistics or to perform other actions at the end of each iteration.
+"""
 function sampler_binary! end
+
+"""
+    sampler_qumo!(
+        problem::Problem{T, TEval},
+        setup::Setup{T},
+        workspace::Workspace{T},
+        iterations::Integer,
+        annealing_delta::AbstractVector{T},
+        per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing
+    ) where {T<:Real, TEval<:Real, TIterationCallbackState}
+
+Sampler for mixed QUMO problems, where the binaries are `{0, 1}` and
+the continuous in `[-1, 1]`.
+Arguments include:
+
+- `problem` contains the input problem. The related matrices will not change.
+   The computation will be performed using the `T` elementary data-type, but
+   the evaluation of the energies will be performed using the `TEval` data-type.
+
+- `setup` contains the setup parameters, such as the gradient, momentum, and dt.
+   This will not change during the sampling process.
+
+- `workspace` contains caller-provided scratch buffers that will be used to
+  perform the sampling. This buffers will change during the sampling process,
+  but the caller should not depend on the values in them after the sampling is done.
+
+- `iterations` is the number of iterations to perform.
+
+- `annealing_delta` is a vector of the annealing factor values to use.
+  This vector will change during the sampling process, and at the end
+  it will typically contain zeros.
+
+- `per_iteration_callback_state` is an optional state that will be passed to the
+  per-iteration callback function, if it is provided. This state can be used to
+  collect statistics or to perform other actions at the end of each iteration.
+"""
 function sampler_qumo! end
 
 @make_sampler(sampler, non_linearity_sign!, enforce_inelastic_wall_ising!, 0, mul!)

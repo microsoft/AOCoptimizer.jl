@@ -52,7 +52,7 @@ macro make_non_linearity(
     quote
         @inline function $(esc(kernel_name))(x::AbstractArray)
             I = @index(Global)
-            @inbounds x[I] = $fn(x[I])
+            @inbounds x[I] = $(esc(fn))(x[I])
             return
         end
 
@@ -71,7 +71,7 @@ macro make_non_linearity(
 
         @inline function $(esc(fn_name))(::CPU, x::AbstractArray)
             @simd for index in eachindex(x)
-                @inbounds x[index] = $fn(x[index])
+                @inbounds x[index] = $(esc(fn))(x[index])
             end
             return nothing
         end
@@ -109,26 +109,23 @@ function __register_non_linearities()
         return
     end
 
-    lock(__NON_LINEARITIES_LOCK)
-    if __NON_LINEARITY_MACROS_EXPANDED[]
-		unlock(__NON_LINEARITIES_LOCK)
-        return
-    end
-
-    try
-        for (name, fn) in __NON_LINEARITIES
-            @eval @make_non_linearity($name, $fn)
+    @lock __NON_LINEARITIES_LOCK begin
+        if __NON_LINEARITY_MACROS_EXPANDED[]
+            return
         end
 
-        __NON_LINEARITY_MACROS_EXPANDED[] = true
-    catch err
-        @error "Failed to register non-linearities. Ensure that the non-linearity functions are defined correctly."
-        @error "Error: $err"
-        @error "Stacktrace: $(catch_backtrace())"
-        return
-    finally
-        unlock(__NON_LINEARITIES_LOCK)
-    end
+        try
+            for (name, fn) in __NON_LINEARITIES
+                @eval @make_non_linearity($name, $fn)
+            end
+
+            __NON_LINEARITY_MACROS_EXPANDED[] = true
+        catch err
+            @error "Failed to register non-linearities. Ensure that the non-linearity functions are defined correctly."
+            @error "Error: $err"
+            @error "Stacktrace: $(catch_backtrace())"
+        end
+    end # lock
 end
 
 """
