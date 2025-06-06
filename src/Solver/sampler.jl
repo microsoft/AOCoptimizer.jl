@@ -194,11 +194,11 @@ macro make_sampler(
 
                 @inbounds begin
                     @. spins = x
-                    $binary_non_linearity(@view spins[1:binaries, :])
+                    $(esc(binary_non_linearity))(@view spins[1:binaries, :])
 
                     # The mul! seems to work faster than the dot product.
                     # This is the most expensive operation (measured in the CPU)
-                    $inplace_matrix_vector_multiplication(fields, interactions, spins)
+                    $(esc(inplace_matrix_vector_multiplication))(fields, interactions, spins)
                     # fields .= interactions * spins  --- slower
 
                     # this is temporary storage
@@ -250,7 +250,7 @@ macro make_sampler(
                     end
 
                     @. y = spins
-                    $walls(x)
+                    $(esc(walls))(x)
 
                     _annealing .-= delta
 
@@ -260,7 +260,7 @@ macro make_sampler(
                 end
 
                 if $per_iteration_callback !== nothing
-                    $per_iteration_callback(per_iteration_callback_state, i, spins)
+                    $(esc(per_iteration_callback))(per_iteration_callback_state, i, spins)
                 end
             end
 
@@ -268,7 +268,7 @@ macro make_sampler(
             # Recall, that we have used the spins to store a copy of the x's.
             # Hence, we need to recompute them.
             @. spins = x
-            @. spins[1:binaries, :] = $binary_non_linearity.(spins[1:binaries, :])
+            $(esc(binary_non_linearity)).(spins[1:binaries, :])
 
             return nothing
         end
@@ -305,7 +305,7 @@ macro make_sampler(
 
             # Be careful of the dimensions of the matrices and vectors.
 
-            $name_internal(
+            $(esc(name_internal))(
                 interactions,
                 external,
                 binaries,
