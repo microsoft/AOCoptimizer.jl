@@ -268,7 +268,7 @@ macro make_sampler(
             # Recall, that we have used the spins to store a copy of the x's.
             # Hence, we need to recompute them.
             @. spins = x
-            $(esc(binary_non_linearity)).(spins[1:binaries, :])
+            $(esc(binary_non_linearity))(@view spins[1:binaries, :])
 
             return nothing
         end
