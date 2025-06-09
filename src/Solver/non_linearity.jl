@@ -24,6 +24,15 @@ function _cuda_non_linearity_extension_code(::BackendExtension, fn_name, fn)
     return Expr(:block)  # default empty block
 end
 
+"""
+    @make_non_linearity(name, fn)
+
+Macro to create a non-linearity function that applies
+the function `fn` element-wise to an array `x`.
+
+Where supported, it will generate optimized code for
+specific backends (e.g., CUDA).
+"""
 macro make_non_linearity(
     # Name of the generated function
     name::AbstractString,
@@ -43,7 +52,7 @@ macro make_non_linearity(
     quote
         @inline function $(esc(kernel_name))(x::AbstractArray)
             I = @index(Global)
-            @inbounds x[I] = $fn(x[I])
+            @inbounds x[I] = $(esc(fn))(x[I])
             return
         end
 
@@ -62,7 +71,7 @@ macro make_non_linearity(
 
         @inline function $(esc(fn_name))(::CPU, x::AbstractArray)
             @simd for index in eachindex(x)
-                @inbounds x[index] = $fn(x[index])
+                @inbounds x[index] = $(esc(fn))(x[index])
             end
             return nothing
         end
@@ -100,54 +109,51 @@ function __register_non_linearities()
         return
     end
 
-    lock(__NON_LINEARITIES_LOCK)
-    if __NON_LINEARITY_MACROS_EXPANDED[]
-		unlock(__NON_LINEARITIES_LOCK)
-        return
-    end
-
-    try
-        for (name, fn) in __NON_LINEARITIES
-            @eval @make_non_linearity($name, $fn)
+    @lock __NON_LINEARITIES_LOCK begin
+        if __NON_LINEARITY_MACROS_EXPANDED[]
+            return
         end
 
-        __NON_LINEARITY_MACROS_EXPANDED[] = true
-    catch err
-        @error "Failed to register non-linearities. Ensure that the non-linearity functions are defined correctly."
-        @error "Error: $err"
-        @error "Stacktrace: $(catch_backtrace())"
-        return
-    finally
-        unlock(__NON_LINEARITIES_LOCK)
-    end
+        try
+            for (name, fn) in __NON_LINEARITIES
+                @eval @make_non_linearity($name, $fn)
+            end
+
+            __NON_LINEARITY_MACROS_EXPANDED[] = true
+        catch err
+            @error "Failed to register non-linearities. Ensure that the non-linearity functions are defined correctly."
+            @error "Error: $err"
+            @error "Stacktrace: $(catch_backtrace())"
+        end
+    end # lock
 end
 
 """
-    _non_linearity_sign!(x::AbstractArray{T,N}) where {T<:Real,N}
+    non_linearity_sign!(x::AbstractArray{T,N}) where {T<:Real,N}
 
 In-place application of the sign function element-wise to the array `x`.
 """
-function _non_linearity_sign! end
+function non_linearity_sign! end
 
 """
-    _non_linearity_tanh!(x::AbstractArray{T,N}) where {T<:Real,N}
+    non_linearity_tanh!(x::AbstractArray{T,N}) where {T<:Real,N}
 
 In-place application of the sign function element-wise to the array `x`.
 """
-function _non_linearity_tanh! end
+function non_linearity_tanh! end
 
 """
-    _non_linearity_binary!(x::AbstractArray{T,N}) where {T<:Real,N}
+    non_linearity_binary!(x::AbstractArray{T,N}) where {T<:Real,N}
 
 In-place application of the function `x -> (x>0.5)?1.0:0.0`
 element-wise to the array `x`.
 """
-function _non_linearity_binary! end
+function non_linearity_binary! end
 
-push!(__NON_LINEARITIES, ("_non_linearity_sign", sign))
-push!(__NON_LINEARITIES, ("_non_linearity_tanh", tanh))
+push!(__NON_LINEARITIES, ("non_linearity_sign", sign))
+push!(__NON_LINEARITIES, ("non_linearity_tanh", tanh))
 
-push!(__NON_LINEARITIES, ("_non_linearity_binary", x -> begin
+push!(__NON_LINEARITIES, ("non_linearity_binary", x -> begin
     if (x > 0.5)
         one(x)
     else

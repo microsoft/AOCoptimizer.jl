@@ -15,6 +15,8 @@ import AOCoptimizer.Solver
 
 using CUDA: CuArray, CuVector, NVML, CUDABackend, @cuda, has_cuda
 
+CUDA.device(x::SubArray{T,N,C,D,F}) where {T,N,D,C,F} = CUDA.device(x.parent)
+
 """
     _get_cuda_info()::Dict{String,Any}
 

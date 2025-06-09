@@ -22,6 +22,7 @@
         "cpuvendor",
         "CUDA",
         "deploydocs",
+        "eigmax",
         "ENDATA",
         "eprint",
         "GRAPHCUT",
@@ -38,6 +39,7 @@
         "Kirill",
         "LASTEXITCODE",
         "lenstr",
+        "lualatex",
         "Lyutsarev",
         "makedocs",
         "mathengine",
@@ -78,6 +80,5 @@
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ],
-    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\notebooks"
+    ]
 }
