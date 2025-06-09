@@ -10,10 +10,12 @@ using Adapt
 using BFloat16s
 using Compat
 using Distributions
+using IntervalSets
 using KernelAbstractions
 using LinearAlgebra
 using Printf
 using Random
+using Sobol
 using SparseArrays
 
 @compat public @make_wall, enforce_inelastic_wall!
@@ -26,6 +28,11 @@ using SparseArrays
 @compat public non_linearity_sign!, non_linearity_tanh!, non_linearity_binary!
 @compat public @make_sampler
 @compat public sampler!
+@compat public ConfigurationSpace, sample_configuration_space, sample_single_configuration
+@compat public @make_exploration
+@compat public explore, explore_with_tracer, collect_exploration_results
+
+using ..AOCoptimizer: CancellationToken, is_cancelled
 
 """
     TEnergyObservations{T<:Number}
@@ -42,7 +49,17 @@ include("problem.jl")
 include("setup.jl")
 include("workspace.jl")
 
+# the following files implement the sampler
 include("non_linearity.jl")
 include("sampler.jl")
+include("sampler_tracer.jl")
+
+# the following files implement exploration
+include("collectors.jl")
+include("exploration.jl")
+
+# the following files implement the solver workflow
+include("configuration.jl")
+include("estimators.jl")
 
 end # module

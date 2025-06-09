@@ -21,6 +21,7 @@
         "cputhreads",
         "cpuvendor",
         "CUDA",
+        "CUSPARSE",
         "deploydocs",
         "eigmax",
         "ENDATA",
@@ -66,6 +67,7 @@
         "reresolve",
         "Rowstron",
         "sitename",
+        "Sobol",
         "sprintf",
         "stdlib",
         "testset",
@@ -80,5 +82,6 @@
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ]
+    ],
+    "julia.environmentPath": "e:\\Repos\\MSRC\\OpticalCompute\\AOCoptimizer.jl\\notebooks"
 }

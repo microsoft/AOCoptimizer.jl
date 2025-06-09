@@ -26,6 +26,14 @@ end
 
 Adapt.@adapt_structure(Workspace)
 
+"""
+    _dispose(workspace::Workspace)
+
+This function serves mostly as a marker to indicate that the workspace
+is not used anymore and can be disposed of.
+"""
+_dispose(::Workspace) = return
+
 TSampler = Distribution{Univariate,Continuous}
 IsingSampler::TSampler = Distributions.Uniform(-1, 1)
 BinarySampler::TSampler = Distributions.Uniform(0, 1)

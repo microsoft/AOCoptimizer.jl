@@ -121,7 +121,7 @@ macro make_sampler(
     # momentum, and annealing parameters, and returns two vectors
     # corresponding to the adjusted gradient and momentum.
     # Nothing or Function: TV * TV * TV → TV * TV
-    adjust_parameters::Union{Nothing, Function} = nothing,
+    adjust_parameters::Union{Nothing, Function, Symbol} = nothing,
 
     # Extensibility point that allows to run a callback
     # at the end of each iteration (e.g., to collect statistics).
@@ -129,7 +129,7 @@ macro make_sampler(
     # a user supplied state object, the iteration number, and the current
     # values of the spins; it should not return anything.
     # Nothing or Function: State * Integer * TV → Nothing
-    per_iteration_callback::Union{Nothing, Function} = nothing,
+    per_iteration_callback::Union{Nothing, Function, Expr} = nothing,
 )
 
     name_internal = Symbol("_", name, "_internal", "!")

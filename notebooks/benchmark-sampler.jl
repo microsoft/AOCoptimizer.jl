@@ -9,6 +9,8 @@ using Random
 using AOCoptimizer
 using AOCoptimizer.Solver
 
+include("utils.jl")
+
 CUDA.allowscalar(false)
 AOCoptimizer.init()
 
@@ -17,15 +19,7 @@ T = Float32;
 n = 800;
 number_of_experiments = 2048;
 
-graph = rand(T, n, n);
-graph = graph + graph';
-graph -= Diagonal(diag(graph));
-graph = -graph;
-
-# no need to worry about correct computation of the eigenvalue
-# we do not care about the result here
-λ = eigmax(graph);
-graph /= λ;
+graph = create_random_graph(T, n);
 
 # ## Run in a CPU
 
