@@ -21,7 +21,7 @@ number_of_experiments = 2048;
 
 graph = create_random_graph(T, n);
 
-# ## Run in a CPU
+# ## Run in the CPU
 
 interactions = copy(graph);
 

@@ -95,7 +95,7 @@ macro make_exploration(
 
                     number_of_iterations = iterations()
                     delta = make_annealing_delta(current_setup, number_of_iterations)
-                    $sampler(problem, current_setup, workspace, number_of_iterations, delta)
+                    $(esc(sampler))(problem, current_setup, workspace, number_of_iterations, delta)
 
                     # @debug "[$(now())] Calculating energies for $current to $last_index"
                     calculate_energies!(
