@@ -2,6 +2,7 @@
     "cSpell.words": [
         "Alexandris",
         "allowscalar",
+        "Arnoldi",
         "atol",
         "Ballani",
         "Berloff",
@@ -57,6 +58,7 @@
         "OBJSENSE",
         "Parmigiani",
         "parsefile",
+        "partialschur",
         "prettyurls",
         "PUBO",
         "QUADOBJ",
@@ -77,6 +79,7 @@
         "triu",
         "Vassily",
         "versioninfo",
+        "weakdeps",
         "xchg",
         "Xoshiro",
         "Yinyu",

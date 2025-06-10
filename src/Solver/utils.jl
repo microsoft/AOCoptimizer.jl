@@ -19,4 +19,4 @@ _similar_vector(x::AbstractArray{T}, l) where {T} = similar(x, l)
 This function serves as a marker to indicate that the object `x` is not used anymore
 and can be disposed of.
 """
-_dispose(x::Any) = return
+_dispose(::Any) = return

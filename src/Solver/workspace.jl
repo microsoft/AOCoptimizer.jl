@@ -25,6 +25,9 @@ struct Workspace{T<:Real}
 end
 
 Adapt.@adapt_structure(Workspace)
+KernelAbstractions.get_backend(wks::Workspace) =
+    KernelAbstractions.get_backend(wks.x)
+
 
 """
     _dispose(workspace::Workspace)

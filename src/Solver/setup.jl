@@ -96,6 +96,8 @@ struct Setup{T<:Real}
 end
 
 Adapt.@adapt_structure(Setup)
+KernelAbstractions.get_backend(setup::Setup) =
+    get_backend(setup.Annealing)
 
 Base.length(setup::Setup) = length(setup.Annealing)
 

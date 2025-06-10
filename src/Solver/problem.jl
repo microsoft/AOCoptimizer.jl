@@ -264,3 +264,24 @@ struct Problem{T<:Real,TEval<:Real} <: AbstractProblem{T}
 end
 
 Adapt.@adapt_structure(Problem)
+KernelAbstractions.get_backend(problem::Problem) =
+    KernelAbstractions.get_backend(problem.Interactions)
+
+make_problem(
+    T::DataType,
+    interactions::AbstractMatrix{<:Real},
+    field::Union{Nothing,AbstractVector{<:Real}},
+    binary::Integer,
+) = begin
+    if field === nothing
+        return Problem(T.(interactions), binary)
+    else
+        return Problem(T.(interactions), T.(field), binary)
+    end
+end
+
+make_problem(T::DataType, interactions::AbstractMatrix{<:Real}) = begin
+    n, m = size(interactions)
+    @assert n == m
+    return make_problem(T, interactions, nothing, n)
+end
