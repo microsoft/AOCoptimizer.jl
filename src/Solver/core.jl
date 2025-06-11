@@ -63,10 +63,10 @@ macro make_solver(name, exploration)
             timeout::Second;
             rng::AbstractRNG = Random.GLOBAL_RNG,
             backend::Backend = DefaultBackEnd(),
-            annealing = ClosedInterval(0.01, 1.0),
-            gradient = ClosedInterval(0.01, 1.0),
-            momentum = ClosedInterval(0.95, 0.99),
-            deep_search_iterations = ClosedInterval(500, 20000),
+            annealing::ClosedInterval = ClosedInterval(0.01, 1.0),
+            gradient::ClosedInterval = ClosedInterval(0.01, 1.0),
+            momentum::ClosedInterval = ClosedInterval(0.95, 0.99),
+            deep_search_iterations::ClosedInterval = ClosedInterval(500, 20000),
             dt::Real = 0.5,
             phase_1_fraction::Real = 0.1,
             phase_2_fraction::Real = 0.2,
@@ -80,9 +80,6 @@ macro make_solver(name, exploration)
             @assert all(diag(interactions)[1:binary] .== zero(TInput))
             @assert issymmetric(interactions)
             @assert field === nothing || length(field) == n
-            @assert annealing isa ClosedInterval
-            @assert gradient isa ClosedInterval
-            @assert momentum isa ClosedInterval
             @assert annealing.left >= 0.0
             @assert gradient.left > 0.0
             @assert momentum.left >= 0.0
@@ -225,7 +222,16 @@ macro make_solver(name, exploration)
             phase_2_elapsed_time = _elapsed(phase_2_info)
             estimate_iterations_per_sec = 1000.0 * exploration_2.Iterations / phase_2_elapsed_time.value
 
-            @warn "HACK HERE CORRECT"
+            #=
+            It is possible that the required number of iterations (even the minimum)
+            may be too large to fit in the remaining time. In that case, we need
+            to adjust the bounds requested by the caller. Since, our estimate of the
+            rate of iterations may be wrong (and it seems that we underestimate), we
+            adjust the computation below by a factor of 4 that seems to work ok
+            in practice.
+
+            TODO: Improve the estimate of the rate of iterations
+            =#
             max_possible_iterations = 4*ceil(Int, remaining_time * estimate_iterations_per_sec)
 
             maximum_number_of_iterations = max(min(maximum_number_of_iterations, exploration_2.Iterations), min(maximum_number_of_iterations, max_possible_iterations))
@@ -248,38 +254,58 @@ macro make_solver(name, exploration)
 
             @debug "Starting deep search" seed seed_iterations remaining_time
 
+            #=
+            No matter what, we want to run the sampler at least once
+            in the deep search phase. We may run in this situation,
+            if the timeout specified by the caller is too small,
+            or we have made poor choices in the allocation of time
+            for the first two phases (most likely, because of miscalculating
+            the capabilities of the backend).
+            =#
             if remaining_time <= 0.0
                 remaining_time = 1.0
             end
 
-            estimated_loop_time = nothing
+            #=
+            To avoid violating the timeout, we continuously estimate the rate
+            of iterations for the problem. We use that to estimate the time
+            that will take for the next set of experiments, and it that is deemed
+            to be much larger than the remaining time, we stop the search.
+            Observe that we still run at least one iteration.
+            =#
+            estimated_loop_time_per_iteration = nothing
+
             results = []
             iterations = []
             deep_search_info = phase_start()
             while remaining_time > 0.0
                 @debug "Starting new iteration" remaining_time
 
-                if estimated_loop_time !== nothing && remaining_time < 0.5 * estimated_loop_time
-                    break
+                number_of_iterations = iteration_number_chooser()
+                @assert number_of_iterations > 0 "The number of iterations must be positive, got $number_of_iterations"
+                if estimated_loop_time_per_iteration !== nothing
+                    estimated_loop_time = estimated_loop_time_per_iteration * number_of_iterations
+                    if remaining_time < 0.5 * estimated_loop_time
+                        break
+                    end
                 end
 
                 start_time = now()
 
-                number_of_iterations = iteration_number_chooser()
                 parameters = (
                     Samples = cld(batch_size, length(third_setup)),
                     Iterations=number_of_iterations,
-                    PointsToSave = 0, # not applicable
                     TimeBudget = remaining_time,
                 )
-                result =
-                    $(esc(name_internal))(backend, problem, third_setup, batch_size, p3rng, parameters)
+                result = $(esc(name_internal))(
+                    backend, problem, third_setup, batch_size, p3rng, parameters)
                 diff_time = (now() - start_time).value / 1000.0
 
-                if estimated_loop_time === nothing
-                    estimated_loop_time = diff_time
+                loop_time_per_iteration = diff_time / number_of_iterations
+                if estimated_loop_time_per_iteration === nothing
+                    estimated_loop_time_per_iteration = loop_time_per_iteration
                 else
-                    estimated_loop_time = 0.5 * estimated_loop_time + 0.5 * diff_time
+                    estimated_loop_time_per_iteration = 0.5 * estimated_loop_time_per_iteration + 0.5 * loop_time_per_iteration
                 end
 
                 append!(results, result)
@@ -297,7 +323,7 @@ macro make_solver(name, exploration)
 
             KernelAbstractions.synchronize(backend)
 
-            phase_1_overview = PhaseStatistics(phase_1_info, initial_setup, phase_1_result), [exploration_1.Iterations])
+            phase_1_overview = PhaseStatistics(phase_1_info, initial_setup, phase_1_result, [exploration_1.Iterations])
             phase_2_overview = PhaseStatistics(phase_2_info, second_setup, phase_2_result, [exploration_2.Iterations])
             deep_search_overview = PhaseStatistics(deep_search_info, third_setup, results, iterations)
 
@@ -310,22 +336,28 @@ macro make_solver(name, exploration)
             return runtime
         end # function
 
-        @eval $(esc(name))(
+        @inline function $(esc(name))(
             T::DataType,
             interactions::AbstractMatrix{TInput},
             timeout::Second;
             kwargs...,
-        ) where {TInput<:Real} =
-            $(esc(name))(T, interactions, nothing, size(interactions, 1), timeout; kwargs...)
+        ) where {TInput<:Real}
+            $(esc(name))(
+                T, interactions, nothing, size(interactions, 1), timeout;
+                kwargs...)
+        end
 
-        @eval $(esc(name))(
+        @inline function $(esc(name))(
             T::DataType,
             interactions::AbstractMatrix{TInput},
             field::AbstractVector{TInput},
             timeout::Second;
             kwargs...,
-        ) where {TInput<:Real} =
-            $(esc(name))(T, interactions, field, size(interactions, 1), timeout; kwargs...)
+        ) where {TInput<:Real}
+            $(esc(name))(
+                T, interactions, field, size(interactions, 1), timeout;
+                kwargs...)
+        end
 
     end # quote
 end # macro

@@ -10,6 +10,7 @@ using Adapt
 using ArnoldiMethod: Target, LR, SR, partialschur
 using BFloat16s
 using Compat
+using DataStructures
 using Dates
 using Distributions
 using IntervalSets
@@ -34,6 +35,7 @@ using SparseArrays
 @compat public @make_exploration
 @compat public explore, explore_with_tracer, collect_exploration_results
 @compat public PhaseInfo, PhaseStatistics
+@compat public get_engines, best_engine, current_engine, set_current_engine
 @compat public solve, solve_binary, solve_qumo
 
 using ..AOCoptimizer: CancellationToken, is_cancelled
@@ -66,5 +68,7 @@ include("exploration.jl")
 include("configuration.jl")
 include("estimators.jl")
 include("phase_stats.jl")
+include("engine.jl")
+include("core.jl")
 
 end # module

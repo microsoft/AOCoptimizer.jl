@@ -5,6 +5,7 @@
 using Revise
 using BenchmarkTools
 using CUDA
+using Dates
 using LinearAlgebra
 using Random
 using AOCoptimizer
@@ -27,4 +28,4 @@ repetitions = 4;
 
 graph = create_random_graph(T, n);
 
-problem = AOCoptimizer.Solver.make_problem(T, graph);
+sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60));

@@ -155,4 +155,6 @@ end
 
 AOCoptimizer.Solver._similar_vector(x::CuSparseMatrix, l) = CuVector{eltype(x)}(undef, l)
 
+include("engine.jl")
+
 end # module CUDAExt
