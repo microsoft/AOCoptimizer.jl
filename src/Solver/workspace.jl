@@ -25,6 +25,17 @@ struct Workspace{T<:Real}
 end
 
 Adapt.@adapt_structure(Workspace)
+KernelAbstractions.get_backend(wks::Workspace) =
+    KernelAbstractions.get_backend(wks.x)
+
+
+"""
+    _dispose(workspace::Workspace)
+
+This function serves mostly as a marker to indicate that the workspace
+is not used anymore and can be disposed of.
+"""
+_dispose(::Workspace) = return
 
 TSampler = Distribution{Univariate,Continuous}
 IsingSampler::TSampler = Distributions.Uniform(-1, 1)

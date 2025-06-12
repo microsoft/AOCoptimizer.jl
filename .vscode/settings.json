@@ -2,6 +2,7 @@
     "cSpell.words": [
         "Alexandris",
         "allowscalar",
+        "Arnoldi",
         "atol",
         "Ballani",
         "Berloff",
@@ -21,7 +22,9 @@
         "cputhreads",
         "cpuvendor",
         "CUDA",
+        "CUSPARSE",
         "deploydocs",
+        "eigmax",
         "ENDATA",
         "eprint",
         "GRAPHCUT",
@@ -38,6 +41,7 @@
         "Kirill",
         "LASTEXITCODE",
         "lenstr",
+        "lualatex",
         "Lyutsarev",
         "makedocs",
         "mathengine",
@@ -54,6 +58,7 @@
         "OBJSENSE",
         "Parmigiani",
         "parsefile",
+        "partialschur",
         "prettyurls",
         "PUBO",
         "QUADOBJ",
@@ -64,6 +69,7 @@
         "reresolve",
         "Rowstron",
         "sitename",
+        "Sobol",
         "sprintf",
         "stdlib",
         "testset",
@@ -73,11 +79,11 @@
         "triu",
         "Vassily",
         "versioninfo",
+        "weakdeps",
         "xchg",
         "Xoshiro",
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ],
-    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\notebooks"
+    ]
 }

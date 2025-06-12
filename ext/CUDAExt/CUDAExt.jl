@@ -14,6 +14,9 @@ import AOCoptimizer.Environment
 import AOCoptimizer.Solver
 
 using CUDA: CuArray, CuVector, NVML, CUDABackend, @cuda, has_cuda
+using CUDA.CUSPARSE: CuSparseMatrix
+
+CUDA.device(x::SubArray{T,N,C,D,F}) where {T,N,D,C,F} = CUDA.device(x.parent)
 
 """
     _get_cuda_info()::Dict{String,Any}
@@ -138,5 +141,20 @@ function AOCoptimizer.Solver._enforce_inelastic_wall!(
 end
 
 include("non_linearity.jl")
+
+function AOCoptimizer.Solver.sample_single_configuration!(samples::CuVector{T}, low::T, high::T) where {T<:Real}
+    #=
+    The algorithm uses array indexing and hence is not suitable for GPUs.
+    However, at the same time it is not time-critical, so we can just
+    generate the samples on the CPU and copy them to the GPU.
+    =#
+    vector = Vector{T}(undef, length(samples))
+    sample_single_configuration!(vector, low, high)
+    samples .= vector
+end
+
+AOCoptimizer.Solver._similar_vector(x::CuSparseMatrix, l) = CuVector{eltype(x)}(undef, l)
+
+include("engine.jl")
 
 end # module CUDAExt
