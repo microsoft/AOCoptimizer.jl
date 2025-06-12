@@ -6,10 +6,12 @@ using Revise
 using BenchmarkTools
 using CUDA
 using Dates
+using JSON
 using LinearAlgebra
 using Random
 using AOCoptimizer
 using AOCoptimizer.Solver
+using AOCoptimizer.Environment: local_system_info
 
 include("utils.jl")
 
@@ -28,8 +30,26 @@ repetitions = 4;
 
 graph = create_random_graph(T, n);
 
-sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60));
+engine_cpu = AOCoptimizer.Solver.EngineLocalCpu();
+engine_gpu = AOCoptimizer.Solver.EngineCuda(0);
 
+# sol = AOCoptimizer.Solver.solve(Float32, g_graph, Second(60));
 
-AOCoptimizer.Solver.find_best(sol)
-AOCoptimizer.Solver.search_for_best_configuration(sol)
+# ## Benchmark in the CPU
+
+sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60); engine=engine_cpu);
+println(JSON.json(AOCoptimizer.Solver.extract_runtime_information(sol), 4))
+
+# ## Benchmark in the GPU
+sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60); engine=engine_gpu);
+println(JSON.json(AOCoptimizer.Solver.extract_runtime_information(sol), 4))
+
+# ## System information
+#
+# The benchmark was run on the following system:
+info = local_system_info()
+println(JSON.json(info, 4))
+
+# The benchmark was completed at the following date and time:
+datetime = Dates.now()
+println("Benchmark completed at: ", datetime)

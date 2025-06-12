@@ -5,10 +5,12 @@
 using Revise
 using BenchmarkTools
 using CUDA
+using JSON
 using LinearAlgebra
 using Random
 using AOCoptimizer
 using AOCoptimizer.Solver
+using AOCoptimizer.Environment: local_system_info
 
 include("utils.jl")
 
@@ -107,3 +109,13 @@ CUDA.@bprofile begin
     );
     CUDA.synchronize()
 end
+
+# ## System information
+#
+# The benchmark was run on the following system:
+info = local_system_info()
+println(JSON.json(info, 4))
+
+# The benchmark was completed at the following date and time:
+datetime = Dates.now()
+println("Benchmark completed at: ", datetime)

@@ -294,3 +294,39 @@ function get_solver_results_summary(solver_results)
         num_samples_total,
     )
 end
+
+"""
+    extract_runtime_information(results)
+
+Extracts only runtime information from the results of the solver
+(ignoring the solution found, objectives, etc.)
+"""
+function extract_runtime_information(results)
+    output = OrderedDict{Symbol, Any}()
+    output[:timing] = results[:timing]
+    output[:start] = results[:start]
+    output[:stop] = results[:stop]
+    output[:duration] = string(results[:duration])
+    output[:engine] = results[:engine]
+
+    function per_phase_info(stats)
+        repetitions = length(stats.results)
+        experiments = map(v -> size(v.Measurements), results[:phase_1].results)
+        total_experiments = sum(v -> v[1] * v[2], experiments)
+        return OrderedDict{Symbol, Any}(
+            :iterations => stats.iterations,
+            :runtime => stats.runtime,
+            :duration => string(stats.runtime.stop - stats.runtime.start),
+            :number_of_configurations => length(stats.setup.Annealing),
+            :repetitions => repetitions,
+            :total_experiments => total_experiments,
+            :experiment_shape => experiments[1],
+        )
+    end
+
+    output[:phase_1] = per_phase_info(results[:phase_1])
+    output[:phase_2] = per_phase_info(results[:phase_2])
+    output[:deep_search] = per_phase_info(results[:deep_search])
+
+    return output
+end

@@ -8,6 +8,7 @@ using LinearAlgebra
 using Random
 using AOCoptimizer
 using AOCoptimizer.Solver
+using AOCoptimizer.Environment: local_system_info
 
 include("utils.jl")
 
@@ -114,3 +115,13 @@ CUDA.@bprofile begin
     _my_sampler_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
     CUDA.synchronize()
 end
+
+# ## System information
+#
+# The benchmark was run on the following system:
+info = local_system_info()
+println(JSON.json(info, 4))
+
+# The benchmark was completed at the following date and time:
+datetime = Dates.now()
+println("Benchmark completed at: ", datetime)

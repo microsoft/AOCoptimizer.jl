@@ -16,6 +16,7 @@ using Distributions
 using IntervalSets
 using KernelAbstractions
 using LinearAlgebra
+using OrderedCollections
 using Printf
 using Random
 using Sobol
@@ -38,6 +39,7 @@ using SparseArrays
 @compat public get_engines, best_engine, get_current_engine, set_current_engine
 @compat public @make_solver, solve, solve_binary, solve_qumo
 @compat public find_best, search_for_best_configuration, get_solver_results_summary
+@compat public extract_runtime_information
 
 using ..AOCoptimizer: CancellationToken, is_cancelled
 using ..AOCoptimizer.RuntimeUtils
