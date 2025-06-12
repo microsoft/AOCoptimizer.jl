@@ -33,7 +33,7 @@ graph = create_random_graph(T, n);
 engine_cpu = AOCoptimizer.Solver.EngineLocalCpu();
 engine_gpu = AOCoptimizer.Solver.EngineCuda(0);
 
-# sol = AOCoptimizer.Solver.solve(Float32, g_graph, Second(60));
+# sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60));
 
 # ## Benchmark in the CPU
 
