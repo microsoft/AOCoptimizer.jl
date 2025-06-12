@@ -5,12 +5,25 @@ Implementation of the core solver.
 
 =#
 
+const TRuntimeInfo = Dict{Symbol,Any}
+
+function _cuda_solver_extension_code(::Type{<:Engine}, solver_internal_name, exploration_name)
+    return Expr(:block) # default empty block
+end
+
+"""
+    @make_solver(name, exploration)
+
+Macro to create a solver function that runs the AOC optimizer. The solver
+will be named `name` and will use the `exploration` function.
+"""
 macro make_solver(name, exploration)
     name_internal = Symbol("_run_", exploration)
+    extra_cuda_code = _cuda_solver_extension_code(EngineCuda, name_internal, exploration)
 
     return quote
         @inline function $(esc(name_internal))(
-            ::CPU,
+            ::EngineLocalCpu,
             problem::Problem{T},
             setup::Setup{T},
             batch_size::Integer,
@@ -32,28 +45,7 @@ macro make_solver(name, exploration)
             )
         end # function
 
-        @inline function $(esc(name_internal))(
-            ::GPU,
-            problem::Problem{T},
-            setup::Setup{T},
-            batch_size::Integer,
-            rng::AbstractRNG,
-            parameters,
-        ) where {T<:Real}
-            run_for(
-                ctx -> $(esc(exploration))(
-                    problem,
-                    setup,
-                    batch_size,
-                    ctx,
-                    parameters.Iterations,
-                    parameters.Samples,
-                    rng,
-                ),
-                Second(ceil(parameters.TimeBudget));
-                threads = 1,
-            )
-        end # function
+        $extra_cuda_code
 
         function $(esc(name))(
             T::DataType,
@@ -61,15 +53,7 @@ macro make_solver(name, exploration)
             field::Union{Nothing,AbstractVector{TInput}},
             binary::Integer,
             timeout::Second;
-            rng::AbstractRNG = Random.GLOBAL_RNG,
-            backend::Backend = DefaultBackEnd(),
-            annealing::ClosedInterval = ClosedInterval(0.01, 1.0),
-            gradient::ClosedInterval = ClosedInterval(0.01, 1.0),
-            momentum::ClosedInterval = ClosedInterval(0.95, 0.99),
-            deep_search_iterations::ClosedInterval = ClosedInterval(500, 20000),
-            dt::Real = 0.5,
-            phase_1_fraction::Real = 0.1,
-            phase_2_fraction::Real = 0.2,
+            kwargs...
         ) where {TInput<:Real}
             @assert timeout > zero(Second)
             @assert T <: Real
@@ -80,10 +64,27 @@ macro make_solver(name, exploration)
             @assert all(diag(interactions)[1:binary] .== zero(TInput))
             @assert issymmetric(interactions)
             @assert field === nothing || length(field) == n
-            @assert annealing.left >= 0.0
-            @assert gradient.left > 0.0
-            @assert momentum.left >= 0.0
-            @assert momentum.right < 1.0
+
+            #=
+            The following block defines the keyword arguments of the function.
+            Ideally, the following should have been part of the function signature.
+            However, it seems that this does not work with the macro expansion.
+            =#
+            rng::AbstractRNG = get(kwargs, :rng, Random.GLOBAL_RNG)
+            engine::Engine = get(kwargs, :engine, get_current_engine())
+            annealing_range::ClosedInterval = get(kwargs, :annealing, ClosedInterval(0.01, 1.0))
+            gradient_range::ClosedInterval = get(kwargs, :gradient, ClosedInterval(0.01, 1.0))
+            momentum_range::ClosedInterval = get(kwargs, :momentum, ClosedInterval(0.95, 0.99))
+            deep_search_iterations::ClosedInterval = get(kwargs, :deep_search_iterations, ClosedInterval(500, 20000))
+            dt = get(kwargs, :dt, 0.5)
+            phase_1_fraction = get(kwargs, :phase_1_fraction, 0.1)
+            phase_2_fraction = get(kwargs, :phase_2_fraction, 0.2)
+            # End of keyword arguments of function
+
+            @assert annealing_range.left >= 0.0
+            @assert gradient_range.left > 0.0
+            @assert momentum_range.left >= 0.0
+            @assert momentum_range.right < 1.0
             @assert phase_1_fraction > 0.0
             @assert phase_1_fraction < 1.0
             @assert phase_2_fraction > 0.0
@@ -100,9 +101,14 @@ macro make_solver(name, exploration)
             runtime[:phase_2] = TRuntimeInfo()
             runtime[:deep_search] = TRuntimeInfo()
 
-            runtime[:engine] = (backend = string(backend), T = T)
+            backend = KernelAbstractions.get_backend(engine)
+            runtime[:engine] = (
+                engine = string(engine),
+                backend = string(backend),
+                T = T
+            )
 
-            runtime[:parameter_regions] = (; annealing, gradient, momentum)
+            runtime[:parameter_regions] = (; annealing_range, gradient_range, momentum_range)
 
             runtime[:dt] = dt
             runtime[:timing] = (; timeout, phase_1_fraction, phase_2_fraction)
@@ -121,7 +127,7 @@ macro make_solver(name, exploration)
             problem = make_problem(T, interactions, field, binary)
             problem = adapt(backend, problem)
 
-            configuration = ConfigurationSpace{T}(annealing, gradient, momentum)
+            configuration = ConfigurationSpace{T}(annealing_range, gradient_range, momentum_range)
             annealing, gradient, momentum =
                 sample_configuration_space(_NUMBER_OF_PARAMETERS_TO_SEARCH, configuration)
             @. annealing = annealing / gradient
@@ -129,11 +135,17 @@ macro make_solver(name, exploration)
 
             @debug "Computed configuration parameters"
 
+            #=
+            We do need to copy the annealing vector, since we will modify it.
+            However, the gradient and momentum are not modified in the code,
+            and we could avoid copying---however, copying is cheap for those
+            vectors, and simplifies reasoning (and, surprisingly, type checking)
+            =#
             annealing = adapt(backend, copy(annealing))
-            gradient = adapt(backend, gradient)
-            momentum = adapt(backend, momentum)
+            gradient = adapt(backend, copy(gradient))
+            momentum = adapt(backend, copy(momentum))
 
-            batch_size = _optimal_batch_size(backend, problem)
+            batch_size = _optimal_batch_size(engine, problem)
 
             #
             # First phase
@@ -149,7 +161,7 @@ macro make_solver(name, exploration)
 
             phase_1_info = phase_start()
             phase_1_result = $(esc(name_internal))(
-                backend,
+                engine,
                 problem,
                 initial_setup,
                 batch_size,
@@ -177,7 +189,14 @@ macro make_solver(name, exploration)
 
             phase_2_info = phase_start()
             phase_2_result =
-                $(esc(name_internal))(backend, problem, second_setup, batch_size, p2rng, exploration_2)
+                $(esc(name_internal))(
+                    engine,
+                    problem,
+                    second_setup,
+                    batch_size,
+                    p2rng,
+                    exploration_2
+                )
             phase_end!(phase_2_info)
 
             @assert phase_2_result !== nothing
@@ -298,7 +317,7 @@ macro make_solver(name, exploration)
                     TimeBudget = remaining_time,
                 )
                 result = $(esc(name_internal))(
-                    backend, problem, third_setup, batch_size, p3rng, parameters)
+                    engine, problem, third_setup, batch_size, p3rng, parameters)
                 diff_time = (now() - start_time).value / 1000.0
 
                 loop_time_per_iteration = diff_time / number_of_iterations
@@ -370,7 +389,7 @@ end # macro
         binary::Integer,
         timeout::Second;
         rng::AbstractRNG = Random.GLOBAL_RNG,
-        backend::Backend = DefaultBackEnd(),
+        engine::Engine = get_current_engine(),
         annealing = ClosedInterval(0.01, 1.0),
         gradient = ClosedInterval(0.01, 1.0),
         momentum = ClosedInterval(0.95, 0.99),
@@ -385,7 +404,7 @@ end # macro
         interactions::AbstractMatrix{TInput},
         timeout::Second;
         rng::AbstractRNG = Random.GLOBAL_RNG,
-        backend::Backend = DefaultBackEnd(),
+        engine::Engine = get_current_engine(),
         annealing = ClosedInterval(0.01, 1.0),
         gradient = ClosedInterval(0.01, 1.0),
         momentum = ClosedInterval(0.95, 0.99),
@@ -430,7 +449,7 @@ function solve end
         binary::Integer,
         timeout::Second;
         rng::AbstractRNG = Random.GLOBAL_RNG,
-        backend::Backend = DefaultBackEnd(),
+        engine::Engine = get_current_engine(),
         annealing = ClosedInterval(0.01, 1.0),
         gradient = ClosedInterval(0.01, 1.0),
         momentum = ClosedInterval(0.95, 0.99),
@@ -445,7 +464,7 @@ function solve end
         interactions::AbstractMatrix{TInput},
         timeout::Second;
         rng::AbstractRNG = Random.GLOBAL_RNG,
-        backend::Backend = DefaultBackEnd(),
+        engine::Engine = get_current_engine(),
         annealing = ClosedInterval(0.01, 1.0),
         gradient = ClosedInterval(0.01, 1.0),
         momentum = ClosedInterval(0.95, 0.99),
@@ -491,7 +510,7 @@ function solve_binary end
         binary::Integer,
         timeout::Second;
         rng::AbstractRNG = Random.GLOBAL_RNG,
-        backend::Backend = DefaultBackEnd(),
+        engine::Engine = get_current_engine(),
         annealing = ClosedInterval(0.01, 1.0),
         gradient = ClosedInterval(0.01, 1.0),
         momentum = ClosedInterval(0.95, 0.99),
@@ -506,7 +525,7 @@ function solve_binary end
         interactions::AbstractMatrix{TInput},
         timeout::Second;
         rng::AbstractRNG = Random.GLOBAL_RNG,
-        backend::Backend = DefaultBackEnd(),
+        engine::Engine = get_current_engine(),
         annealing = ClosedInterval(0.01, 1.0),
         gradient = ClosedInterval(0.01, 1.0),
         momentum = ClosedInterval(0.95, 0.99),
@@ -543,6 +562,10 @@ The `dt` parameter specifies the time step for the simulation.
 """
 function solve_qumo end
 
-@make_solver(solve, exploration)
-@make_solver(solve_binary, exploration_binary)
-@make_solver(solve_qumo, exploration_qumo)
+function __register_solvers()
+    @info "Registering default solvers"
+
+    @eval @make_solver(solve, exploration)
+    @eval @make_solver(solve_binary, exploration_binary)
+    @eval @make_solver(solve_qumo, exploration_qumo)
+end

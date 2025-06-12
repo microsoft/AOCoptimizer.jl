@@ -297,13 +297,13 @@ function make_setup(
 end
 
 function copy_view_to!(dest::Setup{T}, source::Setup{T}) where {T<:Real}
-    # This implementation has a number of problems.
-    # It completely ignores the capacity of the dest.
-    # If the source has fewer elements than the destination,
-    # then we will have partial fills.
-    #
-    if length(dest) != length(source)
-        error("Cannot copy view to setup with different lengths: $(length(dest)) != $(length(source))")
+    #=
+    Danger: If the source has fewer elements than the destination,
+    then we will have partial fills.
+    This should be ok, if we ignore the extra
+    =#
+    if length(dest) < length(source)
+        error("Cannot copy view to a setup with smaller lengths: $(length(dest)) < $(length(source))")
     end
 
     copyto!(dest.Annealing, source.Annealing)

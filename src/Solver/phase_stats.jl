@@ -27,11 +27,16 @@ function elapsed(phase::PhaseInfo)::Union{Nothing,TimePeriod}
     end
 end
 
+const TExplorationResultVector = Vector{ExplorationResult}
+
 struct PhaseStatistics
     runtime::PhaseInfo
     setup::Setup
-    results::Vector{ExplorationResult}
+    results::TExplorationResultVector
     iterations::Vector{Integer}
 end
+
+Adapt.adapt_structure(to, v::TExplorationResultVector) =
+    map(x -> Adapt.adapt(to, x), v)
 
 Adapt.@adapt_structure PhaseStatistics

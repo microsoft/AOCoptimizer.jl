@@ -183,11 +183,75 @@ end #macro
         repetitions::Integer,
         rng::AbstractRNG
     )
+
+Run the exploration for a mixing-Ising problem with the given
+`problem` and `initial_setup`. The exploration will run for the
+specified number of `iterations` and `repetitions`.
+The `batch_size` specifies how many samples to process in parallel.
+The `ctx` is a cancellation token that can be used to terminate the
+exploration (e.g., when the allotted time is over).
+The `rng` is the random number generator to use for sampling.
 """
 function exploration end
 
+"""
+    exploration_binary(
+        problem::Problem{T,TEval},
+        initial_setup::Setup{T},
+        batch_size::Integer,
+        ctx::CancellationToken,
+        iterations::Integer,
+        repetitions::Integer,
+        rng::AbstractRNG
+    )
+    exploration_binary(
+        problem::Problem{T,TEval},
+        initial_setup::Setup{T},
+        batch_size::Integer,
+        ctx::CancellationToken,
+        iterations::TIterationNumberChooser,
+        repetitions::Integer,
+        rng::AbstractRNG
+    )
+
+Run the exploration for a positive-QUMO problem with the given
+`problem` and `initial_setup`. The exploration will run for the
+specified number of `iterations` and `repetitions`.
+The `batch_size` specifies how many samples to process in parallel.
+The `ctx` is a cancellation token that can be used to terminate the
+exploration (e.g., when the allotted time is over).
+The `rng` is the random number generator to use for sampling.
+"""
 function exploration_binary end
 
+"""
+    exploration_qumo(
+        problem::Problem{T,TEval},
+        initial_setup::Setup{T},
+        batch_size::Integer,
+        ctx::CancellationToken,
+        iterations::Integer,
+        repetitions::Integer,
+        rng::AbstractRNG
+    )
+    exploration_qumo(
+        problem::Problem{T,TEval},
+        initial_setup::Setup{T},
+        batch_size::Integer,
+        ctx::CancellationToken,
+        iterations::TIterationNumberChooser,
+        repetitions::Integer,
+        rng::AbstractRNG
+    )
+
+Run the exploration for a QUMO problem with the given
+`problem` and `initial_setup`. The exploration will run for the
+specified number of `iterations` and `repetitions`.
+The `batch_size` specifies how many samples to process in parallel.
+The `ctx` is a cancellation token that can be used to terminate the
+exploration (e.g., when the allotted time is over).
+The `rng` is the random number generator to use for sampling.
+"""
 function exploration_qumo end
 
 @make_exploration(exploration, sampler!)

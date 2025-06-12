@@ -103,11 +103,8 @@ In particular, the heuristic for the GPU is based on measurements on a couple
 of NVIDIA GPUs.
 =#
 
-_optimal_batch_size(::Backend, problem::Problem)::Integer = 100
-_optimal_batch_size(::CPU, problem::Problem)::Integer = 100
-_optimal_batch_size(::GPU, problem::Problem)::Integer = cld(6.0e7 * problem.Size^(-1.381), 1)
-_optimal_batch_size(problem::Problem)::Integer =
-    _optimal_batch_size(KernelAbstractions.get_backend(problem), problem)
+_optimal_batch_size(::Engine, problem::Problem)::Integer = 100
+_optimal_batch_size(::EngineLocalCpu, problem::Problem)::Integer = 100
 
 const _NUMBER_OF_PARAMETERS_TO_SEARCH = 32 * 1024
 
