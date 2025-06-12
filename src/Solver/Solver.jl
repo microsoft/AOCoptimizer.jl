@@ -37,6 +37,7 @@ using SparseArrays
 @compat public PhaseInfo, PhaseStatistics
 @compat public get_engines, best_engine, get_current_engine, set_current_engine
 @compat public @make_solver, solve, solve_binary, solve_qumo
+@compat public find_best, search_for_best_configuration, get_solver_results_summary
 
 using ..AOCoptimizer: CancellationToken, is_cancelled
 using ..AOCoptimizer.RuntimeUtils
@@ -72,5 +73,6 @@ include("estimators.jl")
 include("phase_stats.jl")
 include("normalization.jl")
 include("core.jl")
+include("results_stats.jl")
 
 end # module

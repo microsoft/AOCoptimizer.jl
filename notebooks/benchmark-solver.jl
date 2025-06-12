@@ -29,3 +29,7 @@ repetitions = 4;
 graph = create_random_graph(T, n);
 
 sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60));
+
+
+AOCoptimizer.Solver.find_best(sol)
+AOCoptimizer.Solver.search_for_best_configuration(sol)

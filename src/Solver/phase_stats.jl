@@ -36,6 +36,12 @@ struct PhaseStatistics
     iterations::Vector{Integer}
 end
 
+#=
+We need to explicitly convert the elements of the result vector.
+If we leave as a vector, `Adapt.jl` will not automatically parse the vector
+(which is typically a simple CPU vector, but which contains inner vectors
+as elements those inner vectors may have a different backend)
+=#
 Adapt.adapt_structure(to, v::TExplorationResultVector) =
     map(x -> Adapt.adapt(to, x), v)
 
