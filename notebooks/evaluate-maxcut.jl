@@ -28,6 +28,11 @@ baseline = CSV.read(reference_file, DataFrame);
 filename = "G1";
 input_file = joinpath(input_path, filename);
 graph = AOCoptimizer.FileFormats.read_graph_matrix(input_file);
+graph = T.(graph);
+
+timeout = Second(100);
 
 engine = AOCoptimizer.Solver.EngineCuda(0);
-sol = AOCoptimizer.Solver.solve(Float32, -graph, Second(100); engine=engine);
+sol = AOCoptimizer.Solver.solve(T, -graph, timeout; engine=engine);
+perf = AOCoptimizer.Solver.get_solver_results_summary(sol);
+max_cut = AOCoptimizer.graph_cut_from_hamiltonian(graph, perf.obj_best_found);
