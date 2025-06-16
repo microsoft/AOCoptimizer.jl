@@ -32,3 +32,6 @@ foreach ($link in $links) {
     Invoke-WebRequest -Uri $url -OutFile $outputPath
     Write-Verbose -Message "Downloaded $fileName to $outputDirectory"
 }
+
+# And some extra graphs
+

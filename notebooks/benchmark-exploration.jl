@@ -3,6 +3,7 @@
 
 # First, set up the environment
 using Revise
+using Adapt
 using BenchmarkTools
 using CUDA
 using JSON
