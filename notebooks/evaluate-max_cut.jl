@@ -10,6 +10,8 @@ e.g., by running the `download.ps1` script in that directory.
 
 =#
 
+# ## Setup environment
+
 using Revise
 using CUDA
 using CSV
@@ -26,13 +28,12 @@ using AOCoptimizer.Environment: local_system_info
 CUDA.allowscalar(false)
 AOCoptimizer.init()
 
-results_csv = joinpath(@__DIR__, "evaluate-max_cut.csv");
 experiment_id = uuid4();
+results_csv = joinpath(@__DIR__, "evaluate-max_cut-$(experiment_id).csv");
 
 results = DataFrame(
     Instance = String[],
     Timeout = Second[],
-    # Algorithm = String[],
     MaxCut = Float32[],
     BestKnown = Float32[],
     Ratio = Float32[],
@@ -77,8 +78,11 @@ end
 
 filenames = readdir(input_path, join=true) |> filter(is_input_file);
 
+# ## Process each file
+
+println("Starting to process files at $(Dates.now()).")
+
 for filename in filenames
-    # filename = filenames[1]
     @info "Processing file: $filename"
 
     graph_name = basename(filename)
@@ -107,7 +111,6 @@ for filename in filenames
     push!(results, Dict(
         :Instance => graph_name,
         :Timeout => timeout,
-        # :Algorithm => "AOCoptimizer",
         :MaxCut => max_cut,
         :BestKnown => best_known_value,
         :Ratio => ratio_to_best_known,
@@ -121,13 +124,10 @@ for filename in filenames
         :Timestamp => Dates.now()
     ))
 
-    # Write to temporary CSV file
-    if !isfile(results_csv)
-        CSV.write(results_csv, results; writeheader=true)
-    else
-        CSV.write(results_csv, results; append=true)
-    end
+    CSV.write(results_csv, results; append=false, writeheader=true)
 end
+
+println("Finished processing all files at $(Dates.now()).")
 
 # Summary of results:
 println(results)
