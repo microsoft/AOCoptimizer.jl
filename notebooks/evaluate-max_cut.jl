@@ -79,6 +79,8 @@ filenames = readdir(input_path, join=true) |> filter(is_input_file);
 
 for filename in filenames
     # filename = filenames[1]
+    @info "Processing file: $filename"
+
     graph_name = basename(filename)
     graph = AOCoptimizer.FileFormats.read_graph_matrix(filename)
     graph = T.(graph)
