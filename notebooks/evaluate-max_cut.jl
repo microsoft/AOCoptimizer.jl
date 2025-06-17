@@ -151,3 +151,14 @@ println(JSON.json(info, 4))
 # The benchmark was completed at the following date and time:
 datetime = Dates.now()
 println("Benchmark completed at: ", datetime)
+
+settings = Dict(
+    :Configuration => configuration,
+    :SystemInfo => info,
+    :Timestamp => datetime,
+    :ExperimentId => experiment_id
+);
+settings_file_name = joinpath(@__DIR__, "evaluate-max_cut-$(experiment_id)-settings.json");
+open(settings_file_name, "w") do file
+    write(file, JSON.json(settings, 4));
+end;
