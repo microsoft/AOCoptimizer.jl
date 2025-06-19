@@ -156,7 +156,7 @@ settings = Dict(
     :Configuration => configuration,
     :SystemInfo => info,
     :Timestamp => datetime,
-    :ExperimentId => experiment_id
+    :ExperimentId => string(experiment_id)
 );
 settings_file_name = joinpath(@__DIR__, "evaluate-max_cut-$(experiment_id)-settings.json");
 open(settings_file_name, "w") do file
