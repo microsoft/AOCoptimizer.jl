@@ -5,7 +5,8 @@ notebooks = [
     "benchmark-nonlinearity.jl",
     "benchmark-sampler.jl",
     "benchmark-exploration.jl",
-    "benchmark-solver.jl"
+    "benchmark-solver.jl",
+    "evaluate-max_cut.jl"
 ]
 
 for notebook in notebooks

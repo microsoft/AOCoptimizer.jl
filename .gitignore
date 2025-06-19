@@ -8,3 +8,4 @@
 /test/coverage/Manifest.toml
 node_modules/
 *~
+.aider*

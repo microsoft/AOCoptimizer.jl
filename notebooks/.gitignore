@@ -5,3 +5,4 @@ Manifest.toml
 *.log
 *.aux
 *.quarto_ipynb
+evaluate-max_cut.csv
