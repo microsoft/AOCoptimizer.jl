@@ -169,7 +169,7 @@ macro make_sampler(
             iterations::Integer,
             # State for the callback function
             per_iteration_callback_state::Union{Nothing,TIterationCallbackState} = nothing,
-        ) where {T<:Real, TIterationCallbackState}
+        ) where {T<:Real, TIterationCallbackState<:Any}
 
             for i = 1:iterations
 
@@ -286,8 +286,8 @@ macro make_sampler(
             # the vector has size equal to the number of experiments to perform
             annealing_delta::AbstractVector{T},
             # State to be passed to the optional callback which is invoked at the end of each iteration
-            per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing,
-        ) where {T<:Real,TEval<:Real,TIterationCallbackState}
+            per_iteration_callback_state::Union{Nothing, TIterationCallbackState}=nothing,
+        ) where {T<:Real, TEval<:Real, TIterationCallbackState}
 
             spins = workspace.spins
             binaries = problem.Binary

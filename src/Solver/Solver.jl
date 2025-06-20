@@ -34,7 +34,7 @@ using SparseArrays
 @compat public sampler!
 @compat public ConfigurationSpace, sample_configuration_space, sample_single_configuration
 @compat public @make_exploration
-@compat public explore, explore_with_tracer, collect_exploration_results
+@compat public explore, explore_with_tracer
 @compat public PhaseInfo, PhaseStatistics
 @compat public get_engines, best_engine, get_current_engine, set_current_engine
 @compat public @make_solver, solve, solve_binary, solve_qumo
