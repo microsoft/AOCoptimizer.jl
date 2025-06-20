@@ -61,6 +61,7 @@ After successful installation, you can use the package by loading it:
 # if you want to use CUDA, first uncomment the following line to load CUDA.jl
 # using CUDA
 using AOCoptimizer
+AOCoptimizer.init()  # necessary to initialize the package
 ```
 
 Unit tests should also work correctly (it may take a while to finish):
