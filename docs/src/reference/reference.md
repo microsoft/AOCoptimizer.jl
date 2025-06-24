@@ -174,15 +174,15 @@ Solver.@make_sampler
 ```
 
 ```@docs
-Solver.sampler!
+Solver.sample!
 ```
 
 ```@docs
-Solver.sampler_qumo!
+Solver.sample_qumo!
 ```
 
 ```@docs
-Solver.sampler_binary!
+Solver.sample_binary!
 ```
 
 ```@docs
@@ -194,7 +194,7 @@ Solver.SamplerTracer.SamplerWithPlan
 ```
 
 ```@docs
-Solver.sampler_with_tracer!
+Solver.sample_with_tracer!
 ```
 
 ### Exploration
@@ -204,15 +204,15 @@ Solver.@make_exploration
 ```
 
 ```@docs
-Solver.exploration
+Solver.explore
 ```
 
 ```@docs
-Solver.exploration_qumo
+Solver.explore_qumo
 ```
 
 ```@docs
-Solver.exploration_binary
+Solver.explore_binary
 ```
 
 ```@docs

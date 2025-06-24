@@ -80,7 +80,7 @@ end
 end # module SamplerTracer
 
 """
-    sampler_with_tracer!(
+    sample_with_tracer!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -89,9 +89,9 @@ end # module SamplerTracer
         per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing
     ) where {T<:Real, TEval<:AbstractMatrix{<:T}, TIterationCallbackState}
 """
-function sampler_with_tracer! end
+function sample_with_tracer! end
 
-@make_sampler(sampler_with_tracer,
+@make_sampler(sample_with_tracer,
     non_linearity_sign!, enforce_inelastic_wall_ising!,
     0, mul!,
     nothing, SamplerTracer.update!

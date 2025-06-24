@@ -3,6 +3,14 @@ param(
     [string[]] $Notebooks = $null
 )
 
+$old_number_of_threads = $Env:JULIA_NUM_THREADS
+if (-not $old_number_of_threads -or $old_number_of_threads -le 1) {
+    Write-Host "JULIA_NUM_THREADS environment variable is not set. Setting it to 12."
+    $Env:JULIA_NUM_THREADS=12
+} else {
+    Write-Host "JULIA_NUM_THREADS is currently set to $Env:JULIA_NUM_THREADS."
+}
+
 Write-Verbose "Creating Quarto notebooks"
 julia --project compile.jl
 if ($LASTEXITCODE -ne 0) {
@@ -52,3 +60,5 @@ foreach($basename in $all_notebooks) {
         Write-Host "PDF archived successfully to $archiveName."
     }
 }
+
+$Env:JULIA_NUM_THREADS = $old_number_of_threads

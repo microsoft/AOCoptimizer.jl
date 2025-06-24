@@ -51,13 +51,13 @@ delta = annealing / iterations;
 dt = T(0.1);
 
 # Default sampler
-@benchmark Solver._sampler_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
+@benchmark Solver._sample_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
 
 # Binary sampler
-@benchmark Solver._sampler_binary_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
+@benchmark Solver._sample_binary_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
 
 # QUMO sampler
-@benchmark Solver._sampler_qumo_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
+@benchmark Solver._sample_qumo_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
 
 # ## Run in an NVIDIA GPU (CUDA)
 
@@ -89,19 +89,19 @@ dt = T(0.1);
 
 # Default sampler
 CUDA.@bprofile begin
-    Solver._sampler_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
+    Solver._sample_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
     CUDA.synchronize()
 end
 
 # Binary sampler
 CUDA.@bprofile begin
-    Solver._sampler_binary_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
+    Solver._sample_binary_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
     CUDA.synchronize()
 end
 
 # QUMO sampler
 CUDA.@bprofile begin
-    Solver._sampler_qumo_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
+    Solver._sample_qumo_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
     CUDA.synchronize()
 end
 

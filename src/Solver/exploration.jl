@@ -165,7 +165,7 @@ macro make_exploration(
 end #macro
 
 """
-    exploration(
+    explore(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -174,7 +174,7 @@ end #macro
         repetitions::Integer,
         rng::AbstractRNG
     )
-    exploration(
+    explore(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -192,10 +192,10 @@ The `ctx` is a cancellation token that can be used to terminate the
 exploration (e.g., when the allotted time is over).
 The `rng` is the random number generator to use for sampling.
 """
-function exploration end
+function explore end
 
 """
-    exploration_binary(
+    explore_binary(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -204,7 +204,7 @@ function exploration end
         repetitions::Integer,
         rng::AbstractRNG
     )
-    exploration_binary(
+    explore_binary(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -222,10 +222,10 @@ The `ctx` is a cancellation token that can be used to terminate the
 exploration (e.g., when the allotted time is over).
 The `rng` is the random number generator to use for sampling.
 """
-function exploration_binary end
+function explore_binary end
 
 """
-    exploration_qumo(
+    explore_qumo(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -234,7 +234,7 @@ function exploration_binary end
         repetitions::Integer,
         rng::AbstractRNG
     )
-    exploration_qumo(
+    explore_qumo(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -252,8 +252,8 @@ The `ctx` is a cancellation token that can be used to terminate the
 exploration (e.g., when the allotted time is over).
 The `rng` is the random number generator to use for sampling.
 """
-function exploration_qumo end
+function explore_qumo end
 
-@make_exploration(exploration, sampler!)
-@make_exploration(exploration_binary, sampler_binary!)
-@make_exploration(exploration_qumo, sampler_qumo!)
+@make_exploration(explore, sample!)
+@make_exploration(explore_binary, sample_binary!)
+@make_exploration(explore_qumo, sample_qumo!)

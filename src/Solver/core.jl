@@ -565,7 +565,7 @@ function solve_qumo end
 function __register_solvers()
     @info "Registering default solvers"
 
-    @eval @make_solver(solve, exploration)
-    @eval @make_solver(solve_binary, exploration_binary)
-    @eval @make_solver(solve_qumo, exploration_qumo)
+    @eval @make_solver(solve, explore)
+    @eval @make_solver(solve_binary, explore_binary)
+    @eval @make_solver(solve_qumo, explore_qumo)
 end
