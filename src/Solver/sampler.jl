@@ -168,8 +168,10 @@ macro make_sampler(
             # input
             iterations::Integer,
             # State for the callback function
-            per_iteration_callback_state::Union{Nothing,TIterationCallbackState} = nothing,
-        ) where {T<:Real, TIterationCallbackState}
+            # This is expected to be of type Union{Nothing, TIterationCallbackState}
+            # where TIterationCallbackState <: Any can be arbitrary.
+            per_iteration_callback_state = nothing,
+        ) where {T<:Real}
 
             for i = 1:iterations
 
@@ -286,8 +288,10 @@ macro make_sampler(
             # the vector has size equal to the number of experiments to perform
             annealing_delta::AbstractVector{T},
             # State to be passed to the optional callback which is invoked at the end of each iteration
-            per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing,
-        ) where {T<:Real,TEval<:Real,TIterationCallbackState}
+            # This is expected to be of type Union{Nothing, TIterationCallbackState}
+            # where TIterationCallbackState <: Any can be arbitrary.
+            per_iteration_callback_state=nothing,
+        ) where {T<:Real, TEval<:Real}
 
             spins = workspace.spins
             binaries = problem.Binary
@@ -327,7 +331,7 @@ macro make_sampler(
 end # macro
 
 """
-    sampler!(
+    sample!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -360,10 +364,10 @@ Arguments include:
   per-iteration callback function, if it is provided. This state can be used to
   collect statistics or to perform other actions at the end of each iteration.
 """
-function sampler! end
+function sample! end
 
 """
-    sampler_binary!(
+    sample_binary!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -397,10 +401,10 @@ Arguments include:
   per-iteration callback function, if it is provided. This state can be used to
   collect statistics or to perform other actions at the end of each iteration.
 """
-function sampler_binary! end
+function sample_binary! end
 
 """
-    sampler_qumo!(
+    sample_qumo!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -434,18 +438,18 @@ Arguments include:
   per-iteration callback function, if it is provided. This state can be used to
   collect statistics or to perform other actions at the end of each iteration.
 """
-function sampler_qumo! end
+function sample_qumo! end
 
-@make_sampler(sampler, non_linearity_sign!, enforce_inelastic_wall_ising!, 0, mul!)
+@make_sampler(sample, non_linearity_sign!, enforce_inelastic_wall_ising!, 0, mul!)
 
-@make_sampler(sampler_binary,
+@make_sampler(sample_binary,
     non_linearity_binary!,
     enforce_inelastic_wall_binary!,
     0.5,
     mul!
 )
 
-@make_sampler(sampler_qumo,
+@make_sampler(sample_qumo,
     non_linearity_binary!,
     enforce_inelastic_wall_ising!,
     0.5,

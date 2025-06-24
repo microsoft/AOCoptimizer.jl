@@ -34,11 +34,13 @@ for problems of non-trivial size.
 In their simplest form, they present an idealized (i.e., noise-free),
 scalable version of the AOC hardware.
 
-To cite this work please use the following BibTeX entry (from the [arxiv](https://arxiv.org/abs/2304.12594) paper):
+To cite this work please use the following BibTeX entry
+(from the [arxiv](https://arxiv.org/abs/2304.12594) paper):
 
 ```bibtex
 @online{kalinin2023aim,
-      title={Analog Iterative Machine (AIM): using light to solve quadratic optimization problems with mixed variables},
+      title={Analog Iterative Machine (AIM): using light to solve quadratic
+             optimization problems with mixed variables},
       author={Kirill P. Kalinin and George Mourgias-Alexandris and Hitesh Ballani
               and Natalia G. Berloff and James H. Clegg and Daniel Cletheroe
               and Christos Gkantsidis and Istvan Haller and Vassily Lyutsarev
@@ -68,6 +70,7 @@ After successful installation, the following should work:
 # if you want to use CUDA, first uncomment the following line to load CUDA.jl
 # using CUDA
 using AOCoptimizer
+AOCoptimizer.init()
 ```
 
 To further check the installation, run the following command (it may take a while to finish):
@@ -81,8 +84,9 @@ Pkg.test("AOCoptimizer")
 
 More details on installation and basic usage can be found in the
 [docs](https://microsoft.github.io/AOCoptimizer.jl),
-in particular in the [installation](https://microsoft.github.io/AOCoptimizer.jl/dev/manual/installation/) and
-in the [example](https://microsoft.github.io/AOCoptimizer.jl/dev/tutorials/example/).
+in particular in the
+[installation](https://microsoft.github.io/AOCoptimizer.jl/dev/manual/installation/)
+and in the [example](https://microsoft.github.io/AOCoptimizer.jl/dev/tutorials/example/).
 
 ## Contributing
 
@@ -104,6 +108,34 @@ For more information see the
 [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
 with any additional questions or comments.
+
+## Project structure
+
+The project is structured as follows:
+
+- `src/` - contains the source code of the package.
+- `ext/` - source code that gets loaded only when additional packages
+           (for example, `CUDA.jl`) are used.
+- `test/` - contains the tests for the package.
+- `scripts/` - auxiliary scripts
+- `docs/` - contains the documentation for the package.
+- `data/` - sample data used in tests and examples.
+            (In some cases, scripts are provided to download such data from
+            public sources.)
+- `notebooks` - Contains more detailed testing and example scripts.
+- `benchmarks/` - contains scripts to benchmark the performance of the solver.
+- `.github/` - contains GitHub-specific files, such as workflows.
+
+## Manual testing of package
+
+```PowerShell
+.\runtests.ps1
+cd docs
+julia --project .\make.jl
+cd ..
+cd notebooks
+.\compile.ps1  # this may take a while to finish
+```
 
 ## Trademarks
 

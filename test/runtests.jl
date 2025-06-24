@@ -2,6 +2,8 @@ using AOCoptimizer
 using JET
 using Test
 
+AOCoptimizer.init()
+
 disable_jet = false
 disable_aqua = false
 
