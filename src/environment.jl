@@ -10,6 +10,7 @@ module Environment
 using CpuId
 using Compat
 using Pkg
+using ..AOCoptimizer: __VERSION__, __NAME__
 
 @compat public local_system_info
 
@@ -61,7 +62,8 @@ function local_system_info()::Dict{String,Any}
     end
 
     local_system["solver"] = Dict{String,Any}()
-    local_system["solver"]["version"] = _get_package_version("AOCoptimizer")
+    local_system["solver"]["version"] = __VERSION__
+    local_system["solver"]["name"] = __NAME__
 
     return local_system
 end

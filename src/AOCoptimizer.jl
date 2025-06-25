@@ -11,6 +11,7 @@ module AOCoptimizer
 using Compat
 using KernelAbstractions
 using LinearAlgebra
+using TOML
 
 @compat public Direction, MINIMIZATION, MAXIMIZATION
 @compat public CancellationToken, create_cancellation_token, is_cancelled, cancel!
@@ -30,6 +31,10 @@ maximize (`MAXIMIZATION`) the objective function.
     MINIMIZATION
     MAXIMIZATION
 end
+
+const __PROJECT__ = abspath(@__DIR__, "..")
+const __VERSION__ = get(TOML.parsefile(joinpath(__PROJECT__, "Project.toml")), "version", nothing)
+const __NAME__ = get(TOML.parsefile(joinpath(__PROJECT__, "Project.toml")), "name", nothing)
 
 include("threading.jl")
 include("runtime_utils.jl")

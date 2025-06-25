@@ -23,6 +23,7 @@ Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 Sobol = "ed01d8cd-4d21-5b2a-85b4-cc3bdc58bad4"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [weakdeps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
@@ -54,6 +55,7 @@ Printf = "1.11.0"
 Random = "1.11.0"
 Sobol = "1.5.0"
 SparseArrays = "1.11.0"
+TOML = "1.0.3"
 Test = "1"
 julia = "1"
 
