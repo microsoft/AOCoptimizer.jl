@@ -4,6 +4,8 @@
 using Revise
 using BenchmarkTools
 using CUDA
+using Dates
+using JSON
 using LinearAlgebra
 using Random
 using AOCoptimizer
@@ -109,7 +111,7 @@ end
 
 amplified_tanh(x::T) where {T<:Real} = tanh(T(2.0) * x)
 Solver.@make_non_linearity("amplified_tanh", amplified_tanh)
-Solver.@make_sampler(my_sampler, amplified_tanh!, enforce_inelastic_wall_ising!, 0, mul!)
+Solver.@make_sampler(my_sampler, amplified_tanh!, AOCoptimizer.Solver.enforce_inelastic_wall_ising!, 0, mul!)
 
 CUDA.@bprofile begin
     _my_sampler_internal!(interactions, nothing, binaries, gradient, momentum, x, y, fields, spins, annealing, delta, dt, iterations)
