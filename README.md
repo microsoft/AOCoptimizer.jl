@@ -134,7 +134,10 @@ cd docs
 julia --project .\make.jl
 cd ..
 cd notebooks
-.\compile.ps1  # this may take a while to finish
+.\compile.ps1  # this may take a while to finish,
+               # may even fail for unrelated reasons
+cd ..
+.\bom.ps1
 ```
 
 ## Trademarks

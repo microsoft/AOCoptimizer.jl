@@ -12,7 +12,7 @@ using LinearAlgebra
 using AOCoptimizer: Direction, MINIMIZATION, MAXIMIZATION
 
 @compat public qumo, mixed_ising, convert_positive_qumo_to_mixed_ising
-export qumo, mixed_ising, convert_to_mixed_ising, convert_to_qumo
+export convert_to_mixed_ising, convert_to_qumo
 
 """
     qumo{T}

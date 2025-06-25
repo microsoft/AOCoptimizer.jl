@@ -1,4 +1,5 @@
 Manifest.toml
+Manifest-*.toml
 *.tex
 *.qmd
 *.pdf
@@ -6,3 +7,5 @@ Manifest.toml
 *.aux
 *.quarto_ipynb
 evaluate-max_cut.csv
+evaluate-max_cut-*.csv
+evaluate-max_cut-*-settings.json

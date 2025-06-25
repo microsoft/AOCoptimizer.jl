@@ -24,7 +24,6 @@ using Random
 using AOCoptimizer: CancellationToken, is_cancelled
 using AOCoptimizer: Direction, MINIMIZATION, MAXIMIZATION
 
-export qubo
 @compat public qubo, greedy_random, evaluate, size, increase!, decrease!
 
 """

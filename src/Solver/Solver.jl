@@ -42,7 +42,7 @@ using SparseArrays
 @compat public extract_runtime_information
 
 using ..AOCoptimizer: CancellationToken, is_cancelled
-using ..AOCoptimizer.RuntimeUtils
+using ..AOCoptimizer.RuntimeUtils: run_for
 
 """
     TEnergyObservations{T<:Number}

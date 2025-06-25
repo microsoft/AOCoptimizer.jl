@@ -11,7 +11,6 @@ using Dates
 using Base.Threads: Atomic, atomic_xchg!
 using AOCoptimizer: CancellationToken, create_cancellation_token, cancel!
 
-export run_for
 @compat public run_for, RuntimeException
 
 """

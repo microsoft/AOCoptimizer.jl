@@ -12,9 +12,6 @@ using SparseArrays
 @compat public FileNotFoundException
 @compat public GraphIOException, read_graph_matrix, read_directed_graph_matrix
 
-export FileNotFoundException
-export read_graph_matrix
-
 """
     FileNotFoundException(filename::AbstractString, message::AbstractString)
 
