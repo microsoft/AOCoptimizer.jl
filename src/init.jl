@@ -9,8 +9,13 @@ module MOI
     function __init()
         __modules = Base.loaded_modules_array()
         __index_of_jump_ext = findfirst(x -> nameof(x) == :JuMPExt, __modules)
-        __jump_ext = __modules[__index_of_jump_ext]
-        Optimizer[] = __jump_ext.Optimizer
+        if __index_of_jump_ext === nothing
+            # JuMPExt is not loaded, leaving value to `nothing`
+            Optimizer[] = nothing
+        else
+            __jump_ext = __modules[__index_of_jump_ext]
+            Optimizer[] = __jump_ext.Optimizer
+        end
     end
 end
 
