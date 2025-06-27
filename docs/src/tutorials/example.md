@@ -118,6 +118,16 @@ println("Continuous: ", best.Vars[number_of_binaries+1:end])
 
 ## Solving a simple `QUMO` problem
 
+Let's solve now a simple optimization problem that combines
+both binary and continuous variables (`QUMO`). In the example
+below, we have 3 binary variables and 4 continuous variables.
+Using the default interface, it is expected that the first
+variables are binary; e.g., in the example below, the
+variable `number_of_binaries` signifies that the first 3 variables
+are binary, and this parameter is passed to the `solve_qumo` function.
+Moreover, it is expected that the first `number_of_binaries` diagonal
+elements of the matrix `Q` are zero.
+
 ```@example QUMO
 using Dates
 using AOCoptimizer
