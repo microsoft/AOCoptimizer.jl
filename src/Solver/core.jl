@@ -382,7 +382,7 @@ macro make_solver(name, exploration)
 end # macro
 
 """
-    solve(
+    solve_mixed_ising(
         T::DataType,
         interactions::AbstractMatrix{TInput},
         field::Union{Nothing,AbstractVector{TInput}},
@@ -399,7 +399,7 @@ end # macro
         phase_2_fraction::Real = 0.2,
     )
 
-    solve(
+    solve_mixed_ising(
         T::DataType,
         interactions::AbstractMatrix{TInput},
         timeout::Second;
@@ -439,10 +439,10 @@ The configuration space is sampled from the intervals specified in the
 
 The `dt` parameter specifies the time step for the simulation.
 """
-function solve end
+function solve_mixed_ising end
 
 """
-    solve_binary(
+    solve_positive_qumo(
         T::DataType,
         interactions::AbstractMatrix{TInput},
         field::Union{Nothing,AbstractVector{TInput}},
@@ -459,7 +459,7 @@ function solve end
         phase_2_fraction::Real = 0.2,
     )
 
-    solve_binary(
+    solve_positive_qumo(
         T::DataType,
         interactions::AbstractMatrix{TInput},
         timeout::Second;
@@ -500,7 +500,7 @@ The configuration space is sampled from the intervals specified in the
 
 The `dt` parameter specifies the time step for the simulation.
 """
-function solve_binary end
+function solve_positive_qumo end
 
 """
     solve_qumo(
@@ -565,7 +565,7 @@ function solve_qumo end
 function __register_solvers()
     @info "Registering default solvers"
 
-    @eval @make_solver(solve, explore)
-    @eval @make_solver(solve_binary, explore_binary)
+    @eval @make_solver(solve_mixed_ising, explore_mixed_ising)
+    @eval @make_solver(solve_positive_qumo, explore_positive_qumo)
     @eval @make_solver(solve_qumo, explore_qumo)
 end

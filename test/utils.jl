@@ -42,3 +42,19 @@ function _process_input_file(process::Function, filepath::AbstractString, filena
         return process(stream)
     end
 end
+
+function _is_test_file_present(filename::AbstractString)
+    if !isfile(filename)
+        return false
+    end
+
+    # get file size
+    file_size = filesize(filename)
+    if file_size < 512
+        # this is a link to the LFS file, but not the file itself
+        # hence, the file is not present locally
+        return false
+    end
+
+    return true
+end

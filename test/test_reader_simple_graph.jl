@@ -21,6 +21,10 @@ include("utils.jl")
 _gset_directory = joinpath(@__DIR__, "..", "data", "GSet")
 
 function _read_gset_graph(filename::AbstractString)
+    if !_is_test_file_present(filename)
+        return nothing
+    end
+
     _process_input_file(_gset_directory, filename) do stream
         return read_graph_matrix(stream)
     end
@@ -30,6 +34,10 @@ end
 
     @testset "Reading single topology - G1" begin
         graph = _read_gset_graph("G1.bz2")
+        if graph === nothing
+            return
+        end
+
         nodes, nodes_b = size(graph)
         @test nodes == nodes_b
         @test nodes == 800
@@ -44,6 +52,11 @@ end
 
             @debug "Processing " filename
             graph = _read_gset_graph(filename)
+            if graph === nothing
+                @debug "Skipping file " filename " as it is not present"
+                continue
+            end
+
             nodes, nodes_b = size(graph)
             @test nodes > 0
             @test nodes == nodes_b

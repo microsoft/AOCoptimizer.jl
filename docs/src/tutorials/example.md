@@ -24,7 +24,8 @@ using Dates
 using JSON
 using AOCoptimizer
 using AOCoptimizer: graph_cut_from_hamiltonian
-using AOCoptimizer.Solver: solve, find_best, get_solver_results_summary
+using AOCoptimizer.Solver: solve_mixed_ising, find_best
+using AOCoptimizer.Solver: get_solver_results_summary
 
 # Necessary to explicitly initialize the AOCoptimizer package
 AOCoptimizer.init()
@@ -38,7 +39,7 @@ graph = Float32.([
 ])
 
 # observe that we optimize the negative of the adjacency matrix of the graph
-sol = solve(Float32, -graph, Second(10))
+sol = solve_mixed_ising(Float32, -graph, Second(10))
 best = find_best(sol)
 cut = graph_cut_from_hamiltonian(graph, best.Objective)
 println("Energy: ", best.Objective, "; Cut: ", cut)
@@ -74,7 +75,7 @@ while the last four variables are continuous (in the range ``[-1, 1]``).
 ```@example MixedIsing
 using Dates
 using AOCoptimizer
-using AOCoptimizer.Solver: solve, find_best
+using AOCoptimizer.Solver: solve_mixed_ising, find_best
 
 AOCoptimizer.init()
 
@@ -100,7 +101,7 @@ q = Float32.([
         145
 ])
 
-sol = solve(Float32, Q, q, number_of_binaries, Second(10))
+sol = solve_mixed_ising(Float32, Q, q, number_of_binaries, Second(10))
 best = find_best(sol)
 ```
 
@@ -117,6 +118,16 @@ println("Continuous: ", best.Vars[number_of_binaries+1:end])
 ```
 
 ## Solving a simple `QUMO` problem
+
+Let's solve now a simple optimization problem that combines
+both binary and continuous variables (`QUMO`). In the example
+below, we have 3 binary variables and 4 continuous variables.
+Using the default interface, it is expected that the first
+variables are binary; e.g., in the example below, the
+variable `number_of_binaries` signifies that the first 3 variables
+are binary, and this parameter is passed to the `solve_qumo` function.
+Moreover, it is expected that the first `number_of_binaries` diagonal
+elements of the matrix `Q` are zero.
 
 ```@example QUMO
 using Dates

@@ -269,6 +269,8 @@ read_ising(filename::AbstractString)::Ising{Float64} = read_ising(Float64, filen
 Read a QIO problem from a file with name `filename` or from an IO stream `io`.
 Optional type parameter `T` specifies the elementary type used in the the problem (e.g., Float64 or Float32).
 """
+function read_qio end
+
 function read_qio(::Type{T}, filename::AbstractString)::QIOProblem  where {T<:Real}
     problem = _read_json_file(filename)
     problem_type = problem["type"]

@@ -154,4 +154,4 @@ macro make_wall(name, lower, upper)
 end
 
 @make_wall(enforce_inelastic_wall_ising!, -1, 1)
-@make_wall(enforce_inelastic_wall_binary!, 0, 1)
+@make_wall(enforce_inelastic_wall_positive!, 0, 1)
