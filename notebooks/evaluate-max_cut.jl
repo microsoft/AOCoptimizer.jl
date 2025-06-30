@@ -91,7 +91,7 @@ for filename in filenames
 
     timeout = estimate_processing_time(size(graph, 1))
 
-    sol = AOCoptimizer.Solver.solve(T, -graph, timeout; engine=engine)
+    sol = AOCoptimizer.Solver.solve_mixed_ising(T, -graph, timeout; engine=engine)
     perf = AOCoptimizer.Solver.get_solver_results_summary(sol)
     max_cut = AOCoptimizer.graph_cut_from_hamiltonian(graph, perf.obj_best_found)
 

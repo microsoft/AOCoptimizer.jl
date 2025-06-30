@@ -24,7 +24,8 @@ using Dates
 using JSON
 using AOCoptimizer
 using AOCoptimizer: graph_cut_from_hamiltonian
-using AOCoptimizer.Solver: solve, find_best, get_solver_results_summary
+using AOCoptimizer.Solver: solve_mixed_ising, find_best
+using AOCoptimizer.Solver: get_solver_results_summary
 
 # Necessary to explicitly initialize the AOCoptimizer package
 AOCoptimizer.init()
@@ -38,7 +39,7 @@ graph = Float32.([
 ])
 
 # observe that we optimize the negative of the adjacency matrix of the graph
-sol = solve(Float32, -graph, Second(10))
+sol = solve_mixed_ising(Float32, -graph, Second(10))
 best = find_best(sol)
 cut = graph_cut_from_hamiltonian(graph, best.Objective)
 println("Energy: ", best.Objective, "; Cut: ", cut)
@@ -74,7 +75,7 @@ while the last four variables are continuous (in the range ``[-1, 1]``).
 ```@example MixedIsing
 using Dates
 using AOCoptimizer
-using AOCoptimizer.Solver: solve, find_best
+using AOCoptimizer.Solver: solve_mixed_ising, find_best
 
 AOCoptimizer.init()
 
@@ -100,7 +101,7 @@ q = Float32.([
         145
 ])
 
-sol = solve(Float32, Q, q, number_of_binaries, Second(10))
+sol = solve_mixed_ising(Float32, Q, q, number_of_binaries, Second(10))
 best = find_best(sol)
 ```
 

@@ -33,15 +33,15 @@ graph = create_random_graph(T, n);
 engine_cpu = AOCoptimizer.Solver.EngineLocalCpu();
 engine_gpu = AOCoptimizer.Solver.EngineCuda(0);
 
-# sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60));
+# sol = AOCoptimizer.Solver.solve_mixed_ising(Float32, graph, Second(60));
 
 # ## Benchmark in the CPU
 
-sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60); engine=engine_cpu);
+sol = AOCoptimizer.Solver.solve_mixed_ising(Float32, graph, Second(60); engine=engine_cpu);
 println(JSON.json(AOCoptimizer.Solver.extract_runtime_information(sol), 4))
 
 # ## Benchmark in the GPU
-sol = AOCoptimizer.Solver.solve(Float32, graph, Second(60); engine=engine_gpu);
+sol = AOCoptimizer.Solver.solve_mixed_ising(Float32, graph, Second(60); engine=engine_gpu);
 println(JSON.json(AOCoptimizer.Solver.extract_runtime_information(sol), 4))
 
 # ## System information

@@ -165,7 +165,7 @@ macro make_exploration(
 end #macro
 
 """
-    explore(
+    explore_mixed_ising(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -174,7 +174,7 @@ end #macro
         repetitions::Integer,
         rng::AbstractRNG
     )
-    explore(
+    explore_mixed_ising(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -192,10 +192,10 @@ The `ctx` is a cancellation token that can be used to terminate the
 exploration (e.g., when the allotted time is over).
 The `rng` is the random number generator to use for sampling.
 """
-function explore end
+function explore_mixed_ising end
 
 """
-    explore_binary(
+    explore_positive_qumo(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -204,7 +204,7 @@ function explore end
         repetitions::Integer,
         rng::AbstractRNG
     )
-    explore_binary(
+    explore_positive_qumo(
         problem::Problem{T,TEval},
         initial_setup::Setup{T},
         batch_size::Integer,
@@ -222,7 +222,7 @@ The `ctx` is a cancellation token that can be used to terminate the
 exploration (e.g., when the allotted time is over).
 The `rng` is the random number generator to use for sampling.
 """
-function explore_binary end
+function explore_positive_qumo end
 
 """
     explore_qumo(
@@ -254,6 +254,6 @@ The `rng` is the random number generator to use for sampling.
 """
 function explore_qumo end
 
-@make_exploration(explore, sample!)
-@make_exploration(explore_binary, sample_binary!)
+@make_exploration(explore_mixed_ising, sample_mixed_ising!)
+@make_exploration(explore_positive_qumo, sample_positive_qumo!)
 @make_exploration(explore_qumo, sample_qumo!)

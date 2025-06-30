@@ -23,13 +23,37 @@ include("utils.jl")
 
 _qio_directory = joinpath(@__DIR__, "..", "data", "QIO")
 
+function _is_test_file_present(filename::AbstractString)
+    if !isfile(filename)
+        return false
+    end
+
+    # get file size
+    file_size = filesize(filename)
+    if file_size < 512
+        # this is a link to the LFS file, but not the file itself
+        # hence, the file is not present locally
+        return false
+    end
+
+    return true
+end
+
 function _read_rcdp_qubo(filename::AbstractString)
+    if !_is_test_file_present(filename)
+        return nothing
+    end
+
     _process_input_file(_qio_directory, filename) do stream
         return read_qio(stream)
     end
 end
 
 function _read_rcdp_qubo(::Type{T}, filename::AbstractString) where {T<:Real}
+    if !_is_test_file_present(filename)
+        return nothing
+    end
+
     _process_input_file(_qio_directory, filename) do stream
         return read_qio(T, stream)
     end
@@ -39,6 +63,9 @@ end
 
     @testset "Reading dense qubo in FP64" begin
         qubo = _read_rcdp_qubo("RCDP_N10_K36_tau5_5.json.bz2")
+        if qubo === nothing
+            return
+        end
 
         nodes, nodes_b = size(qubo.Terms)
         @test qubo.Info.NumberOfTerms == 360
@@ -57,6 +84,10 @@ end
 
     @testset "Reading dense qubo in FP32" begin
         qubo = _read_rcdp_qubo(Float32, "RCDP_N10_K36_tau5_5.json.bz2")
+        if qubo === nothing
+            return
+        end
+
         @test eltype(qubo.Terms) == Float32
         @test qubo.Info.Objective ≈ Float32(-5000.0)
         @test qubo.Terms[1, 1] ≈ Float32(-471.05806006422929)
@@ -66,6 +97,10 @@ end
 
     @testset "Reading sparse qubo in FP64" begin
         qubo = _read_rcdp_qubo("tile_planting_3D_L_8_p2FP_0.2_p4FP_0.0_inst_1.json.bz2")
+        if qubo === nothing
+            return
+        end
+
         nodes, nodes_b = size(qubo.Terms)
         @test qubo.Info.NumberOfTerms == 512
         @test nodes == nodes_b

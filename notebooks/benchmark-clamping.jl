@@ -162,7 +162,7 @@ cpu_y = rand(T, matrix_size, experiments);
 @benchmark AOCoptimizer.Solver.enforce_inelastic_wall_ising!(cpu_x)
 
 # The binary shortcut to the walls
-@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_binary!(cpu_x)
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_positive!(cpu_x)
 
 # ### Two arrays: the inelastic wall implementation with clamp
 @benchmark combine_clamp!(cpu_x, cpu_y)
@@ -182,7 +182,7 @@ cpu_y = rand(T, matrix_size, experiments);
 @benchmark AOCoptimizer.Solver.enforce_inelastic_wall_ising!(cpu_x, cpu_y)
 
 # The binary shortcut to the walls
-@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_binary!(cpu_x, cpu_y)
+@benchmark AOCoptimizer.Solver.enforce_inelastic_wall_positive!(cpu_x, cpu_y)
 
 # ## GPU based implementations
 
@@ -364,7 +364,7 @@ end
 
 # The binary shortcut to the walls
 CUDA.@bprofile begin
-    AOCoptimizer.Solver.enforce_inelastic_wall_binary!(gpu_x)
+    AOCoptimizer.Solver.enforce_inelastic_wall_positive!(gpu_x)
     CUDA.synchronize()
 end
 
@@ -401,7 +401,7 @@ end
 
 # The binary shortcut to the walls
 CUDA.@bprofile begin
-    AOCoptimizer.Solver.enforce_inelastic_wall_binary!(gpu_x, gpu_y)
+    AOCoptimizer.Solver.enforce_inelastic_wall_positive!(gpu_x, gpu_y)
     CUDA.synchronize()
 end
 

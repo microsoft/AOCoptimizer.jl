@@ -45,7 +45,7 @@ setup = AOCoptimizer.Solver.make_setup(annealing, gradient, momentum, dt, 16);
 # ## Run in the CPU
 
 @benchmark begin
-    result = AOCoptimizer.Solver.explore(
+    result = AOCoptimizer.Solver.explore_mixed_ising(
         problem,
         setup,
         batch_size,
@@ -67,7 +67,7 @@ CUDA.synchronize();
 # Benchmark the exploration function in the GPU
 # (here we avoid the use `CUDA.@bprofile`, which seems to not work correctly).
 
-g_result = AOCoptimizer.Solver.explore(
+g_result = AOCoptimizer.Solver.explore_mixed_ising(
     g_problem,
     g_setup,
     batch_size,
@@ -79,7 +79,7 @@ g_result = AOCoptimizer.Solver.explore(
 CUDA.synchronize();
 
 CUDA.@time begin
-    g_result = AOCoptimizer.Solver.explore(
+    g_result = AOCoptimizer.Solver.explore_mixed_ising(
         g_problem,
         g_setup,
         batch_size,

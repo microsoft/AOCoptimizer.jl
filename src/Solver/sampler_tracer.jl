@@ -7,6 +7,13 @@ Extensions to the sampler to allow collecting the dynamics of the sampler.
 
 module SamplerTracer
 
+using Compat
+using ..Solver: @make_sampler, non_linearity_sign!
+using ..Solver: enforce_inelastic_wall_ising!, enforce_inelastic_wall_positive!
+
+@compat public Periodic, SamplerWithPlan
+@compat public reset!, update!
+
 """
     Periodic{TM<:AbstractArray{<:Real,3}}
 
@@ -80,7 +87,7 @@ end
 end # module SamplerTracer
 
 """
-    sample_with_tracer!(
+    sample_mixed_ising_with_tracer!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -88,11 +95,41 @@ end # module SamplerTracer
         annealing_delta::AbstractVector{T},
         per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing
     ) where {T<:Real, TEval<:AbstractMatrix{<:T}, TIterationCallbackState}
-"""
-function sample_with_tracer! end
 
-@make_sampler(sample_with_tracer,
+Similar to `sample_mixed_ising!`, but with the addition of a tracer that collects
+the spins at regular intervals or at specific iterations, as defined by the tracer's plan.
+This function is useful for analyzing the dynamics of the sampler over time,
+for captures more samples towards the end of the sampling process (e.g.,
+for convergence analysis, debugging).
+"""
+function sample_mixed_ising_with_tracer! end
+
+"""
+    sample_qumo_with_tracer!(
+        problem::Problem{T, TEval},
+        setup::Setup{T},
+        workspace::Workspace{T},
+        iterations::Integer,
+        annealing_delta::AbstractVector{T},
+        per_iteration_callback_state::Union{Nothing,TIterationCallbackState}=nothing
+    ) where {T<:Real, TEval<:AbstractMatrix{<:T}, TIterationCallbackState}
+
+Similar to `sample_qumo!`, but with the addition of a tracer that collects
+the spins at regular intervals or at specific iterations, as defined by the tracer's plan.
+This function is useful for analyzing the dynamics of the sampler over time,
+for captures more samples towards the end of the sampling process (e.g.,
+for convergence analysis, debugging).
+"""
+function sample_qumo_with_tracer! end
+
+@make_sampler(sample_mixed_ising_with_tracer,
     non_linearity_sign!, enforce_inelastic_wall_ising!,
     0, mul!,
+    nothing, SamplerTracer.update!
+)
+
+@make_sampler(sample_qumo_with_tracer,
+    non_linearity_binary!, enforce_inelastic_wall_ising!,
+    0.5, mul!,
     nothing, SamplerTracer.update!
 )

@@ -331,7 +331,7 @@ macro make_sampler(
 end # macro
 
 """
-    sample!(
+    sample_mixed_ising!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -364,10 +364,10 @@ Arguments include:
   per-iteration callback function, if it is provided. This state can be used to
   collect statistics or to perform other actions at the end of each iteration.
 """
-function sample! end
+function sample_mixed_ising! end
 
 """
-    sample_binary!(
+    sample_positive_qumo!(
         problem::Problem{T, TEval},
         setup::Setup{T},
         workspace::Workspace{T},
@@ -401,7 +401,7 @@ Arguments include:
   per-iteration callback function, if it is provided. This state can be used to
   collect statistics or to perform other actions at the end of each iteration.
 """
-function sample_binary! end
+function sample_positive_qumo! end
 
 """
     sample_qumo!(
@@ -440,11 +440,16 @@ Arguments include:
 """
 function sample_qumo! end
 
-@make_sampler(sample, non_linearity_sign!, enforce_inelastic_wall_ising!, 0, mul!)
+@make_sampler(sample_mixed_ising,
+    non_linearity_sign!,
+    enforce_inelastic_wall_ising!,
+    0,
+    mul!
+)
 
-@make_sampler(sample_binary,
+@make_sampler(sample_positive_qumo,
     non_linearity_binary!,
-    enforce_inelastic_wall_binary!,
+    enforce_inelastic_wall_positive!,
     0.5,
     mul!
 )

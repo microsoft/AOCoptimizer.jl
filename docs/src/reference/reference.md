@@ -174,7 +174,7 @@ Solver.@make_sampler
 ```
 
 ```@docs
-Solver.sample!
+Solver.sample_mixed_ising!
 ```
 
 ```@docs
@@ -182,7 +182,7 @@ Solver.sample_qumo!
 ```
 
 ```@docs
-Solver.sample_binary!
+Solver.sample_positive_qumo!
 ```
 
 ```@docs
@@ -194,7 +194,11 @@ Solver.SamplerTracer.SamplerWithPlan
 ```
 
 ```@docs
-Solver.sample_with_tracer!
+Solver.sample_qumo_with_tracer!
+```
+
+```@docs
+Solver.sample_mixed_ising_with_tracer!
 ```
 
 ### Exploration
@@ -204,7 +208,7 @@ Solver.@make_exploration
 ```
 
 ```@docs
-Solver.explore
+Solver.explore_mixed_ising
 ```
 
 ```@docs
@@ -212,7 +216,7 @@ Solver.explore_qumo
 ```
 
 ```@docs
-Solver.explore_binary
+Solver.explore_positive_qumo
 ```
 
 ```@docs
@@ -284,7 +288,7 @@ Solver.@make_solver
 ```
 
 ```@docs
-Solver.solve
+Solver.solve_mixed_ising
 ```
 
 ```@docs
@@ -292,7 +296,7 @@ Solver.solve_qumo
 ```
 
 ```@docs
-Solver.solve_binary
+Solver.solve_positive_qumo
 ```
 
 ```@docs
