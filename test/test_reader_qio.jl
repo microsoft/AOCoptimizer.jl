@@ -23,22 +23,6 @@ include("utils.jl")
 
 _qio_directory = joinpath(@__DIR__, "..", "data", "QIO")
 
-function _is_test_file_present(filename::AbstractString)
-    if !isfile(filename)
-        return false
-    end
-
-    # get file size
-    file_size = filesize(filename)
-    if file_size < 512
-        # this is a link to the LFS file, but not the file itself
-        # hence, the file is not present locally
-        return false
-    end
-
-    return true
-end
-
 function _read_rcdp_qubo(filename::AbstractString)
     if !_is_test_file_present(filename)
         return nothing

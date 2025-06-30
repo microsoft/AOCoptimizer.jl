@@ -68,3 +68,23 @@ Verify that the `AOCoptimizer` package is installed correctly by running:
 ```julia
 Pkg.test("AOCoptimizer")
 ```
+
+## Adding `AOCoptimizer.jl` as a dependency to your project
+
+The approach described in the previous section is suitable for projects
+that either add the `Manifest.toml` file to the repository (in general not recommended),
+or for projects that do not use version control at all. The reason is that
+the URL of the `AOCoptimizer` package does not appear in the `Project.toml` file,
+hence, creating problems for other developers who want to use the project
+that depends on `AOCoptimizer`.
+
+Instead, for such projects manually modify your `Project.toml` file to contain
+the following statements:
+
+```toml
+[deps]
+AOCoptimizer = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
+
+[sources]
+AOCoptimizer = {url = "https://github.com/microsoft/AOCoptimizer.jl"}
+```
