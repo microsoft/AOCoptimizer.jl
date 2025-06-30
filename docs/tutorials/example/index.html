@@ -3,7 +3,8 @@
 using JSON
 using AOCoptimizer
 using AOCoptimizer: graph_cut_from_hamiltonian
-using AOCoptimizer.Solver: solve, find_best, get_solver_results_summary
+using AOCoptimizer.Solver: solve_mixed_ising, find_best
+using AOCoptimizer.Solver: get_solver_results_summary
 
 # Necessary to explicitly initialize the AOCoptimizer package
 AOCoptimizer.init()
@@ -17,7 +18,7 @@ graph = Float32.([
 ])
 
 # observe that we optimize the negative of the adjacency matrix of the graph
-sol = solve(Float32, -graph, Second(10))
+sol = solve_mixed_ising(Float32, -graph, Second(10))
 best = find_best(sol)
 cut = graph_cut_from_hamiltonian(graph, best.Objective)
 println(&quot;Energy: &quot;, best.Objective, &quot;; Cut: &quot;, cut)
@@ -31,20 +32,20 @@ Assignment: Float32[1.0, -1.0, 1.0, -1.0, 1.0]
 Group 1: [1, 3, 5]
 Group 2: [2, 4]</code></pre><p>More statistics reported as follows:</p><pre><code class="language-julia hljs">println(JSON.json(get_solver_results_summary(sol), 4));</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">{
     &quot;obj_best_found&quot;: -3.0,
-    &quot;success_rate&quot;: 0.7124716553287982,
-    &quot;num_operations_to_solution&quot;: 9.561583443501106e6,
-    &quot;time_per_sample&quot;: 1.073469387755102,
-    &quot;time_to_solution&quot;: 3.9661224586647075,
-    &quot;iterations_total&quot;: 2587935,
-    &quot;counts_total&quot;: 1571,
-    &quot;num_samples_total&quot;: 2205
+    &quot;success_rate&quot;: 0.7080745341614907,
+    &quot;num_operations_to_solution&quot;: 1.1916787197139932e7,
+    &quot;time_per_sample&quot;: 1.105175983436853,
+    &quot;time_to_solution&quot;: 4.1336004325031155,
+    &quot;iterations_total&quot;: 3186120,
+    &quot;counts_total&quot;: 1710,
+    &quot;num_samples_total&quot;: 2415
 }</code></pre><p>Detailed measurements are collected in the <code>sol</code> object:</p><pre><code class="language-julia hljs">println(&quot;Number of solver iterations in deep search: &quot;, length(sol[:deep_search].results))
 if length(sol[:deep_search].results) &gt; 0
     println(&quot;Sample set of measurements:&quot;)
     lx = min(10, size(sol[:deep_search].results[1].Measurements, 1))
     ly = min(10, size(sol[:deep_search].results[1].Measurements, 2))
     show(stdout, MIME&quot;text/plain&quot;(), sol[:deep_search].results[1].Measurements[1:lx, 1:ly])
-end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Number of solver iterations in deep search: 21
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Number of solver iterations in deep search: 23
 Sample set of measurements:
 7×10 Matrix{Float32}:
  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0
@@ -53,9 +54,9 @@ Sample set of measurements:
  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0
  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0
  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0
- -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0</code></pre><h2 id="Solving-a-simple-Mixed-Ising-problem"><a class="docs-heading-anchor" href="#Solving-a-simple-Mixed-Ising-problem">Solving a simple Mixed-Ising problem</a><a id="Solving-a-simple-Mixed-Ising-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-a-simple-Mixed-Ising-problem" title="Permalink"></a></h2><p>The following is a simple example of solving a Mixed-Ising problem. The first three variables are either -1 or 1 (spin variables), while the last four variables are continuous (in the range <span>$[-1, 1]$</span>).</p><pre><code class="language-julia hljs">using Dates
+ -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0  -3.0   5.0</code></pre><h2 id="Solving-a-simple-Mixed-Ising-problem"><a class="docs-heading-anchor" href="#Solving-a-simple-Mixed-Ising-problem">Solving a simple Mixed-Ising problem</a><a id="Solving-a-simple-Mixed-Ising-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-a-simple-Mixed-Ising-problem" title="Permalink"></a></h2><p>The following is a simple example of solving a Mixed-Ising problem. The first three variables are either -1 or 1 (spin variables), while the last four variables are continuous (in the range <span>$[-1, 1]$</span>).</p><pre><code class="language-julia hljs">using Dates
 using AOCoptimizer
-using AOCoptimizer.Solver: solve, find_best
+using AOCoptimizer.Solver: solve_mixed_ising, find_best
 
 AOCoptimizer.init()
 
@@ -81,8 +82,8 @@ q = Float32.([
         145
 ])
 
-sol = solve(Float32, Q, q, number_of_binaries, Second(10))
-best = find_best(sol)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(Objective = -654.262f0, Vars = Float32[-1.0, 1.0, -1.0, 0.59760773, 0.03293723, -0.25855103, 0.6723734], Info = (Annealing = 0.13955256f0, Gradient = 0.004097472f0, Momentum = 0.9726141f0), Label = &quot;deep_search&quot;)</code></pre><p>The values of the binaries are:</p><pre><code class="language-julia hljs">println(&quot;Binaries: &quot;, best.Vars[1:number_of_binaries])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Binaries: Float32[-1.0, 1.0, -1.0]</code></pre><p>The values of the continuous variables are:</p><pre><code class="language-julia hljs">println(&quot;Continuous: &quot;, best.Vars[number_of_binaries+1:end])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Continuous: Float32[0.59760773, 0.03293723, -0.25855103, 0.6723734]</code></pre><h2 id="Solving-a-simple-QUMO-problem"><a class="docs-heading-anchor" href="#Solving-a-simple-QUMO-problem">Solving a simple <code>QUMO</code> problem</a><a id="Solving-a-simple-QUMO-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-a-simple-QUMO-problem" title="Permalink"></a></h2><pre><code class="language-julia hljs">using Dates
+sol = solve_mixed_ising(Float32, Q, q, number_of_binaries, Second(10))
+best = find_best(sol)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(Objective = -654.262f0, Vars = Float32[-1.0, 1.0, -1.0, 0.5974782, 0.032861084, -0.25846398, 0.6723447], Info = (Annealing = 0.9080696f0, Gradient = 0.0043801568f0, Momentum = 0.9551141f0), Label = &quot;deep_search&quot;)</code></pre><p>The values of the binaries are:</p><pre><code class="language-julia hljs">println(&quot;Binaries: &quot;, best.Vars[1:number_of_binaries])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Binaries: Float32[-1.0, 1.0, -1.0]</code></pre><p>The values of the continuous variables are:</p><pre><code class="language-julia hljs">println(&quot;Continuous: &quot;, best.Vars[number_of_binaries+1:end])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Continuous: Float32[0.5974782, 0.032861084, -0.25846398, 0.6723447]</code></pre><h2 id="Solving-a-simple-QUMO-problem"><a class="docs-heading-anchor" href="#Solving-a-simple-QUMO-problem">Solving a simple <code>QUMO</code> problem</a><a id="Solving-a-simple-QUMO-problem-1"></a><a class="docs-heading-anchor-permalink" href="#Solving-a-simple-QUMO-problem" title="Permalink"></a></h2><p>Let&#39;s solve now a simple optimization problem that combines both binary and continuous variables (<code>QUMO</code>). In the example below, we have 3 binary variables and 4 continuous variables. Using the default interface, it is expected that the first variables are binary; e.g., in the example below, the variable <code>number_of_binaries</code> signifies that the first 3 variables are binary, and this parameter is passed to the <code>solve_qumo</code> function. Moreover, it is expected that the first <code>number_of_binaries</code> diagonal elements of the matrix <code>Q</code> are zero.</p><pre><code class="language-julia hljs">using Dates
 using AOCoptimizer
 using AOCoptimizer.Solver: solve_qumo, find_best
 
@@ -111,4 +112,4 @@ q = [
 ]
 
 sol = solve_qumo(Float32, Q, q, number_of_binaries, Second(10))
-best = find_best(sol)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(Objective = -2111.4702f0, Vars = Float32[0.0, 1.0, 0.0, 1.0, -0.14032497, -1.0, 1.0], Info = (Annealing = 0.13955256f0, Gradient = 0.0010702889f0, Momentum = 0.9726141f0), Label = &quot;phase_1&quot;)</code></pre><p>The values of the binaries are:</p><pre><code class="language-julia hljs">println(&quot;Binaries: &quot;, best.Vars[1:number_of_binaries])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Binaries: Float32[0.0, 1.0, 0.0]</code></pre><p>The values of the continuous variables are:</p><pre><code class="language-julia hljs">println(&quot;Continuous: &quot;, best.Vars[number_of_binaries+1:end])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Continuous: Float32[1.0, -0.14032497, -1.0, 1.0]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« <code>AOCoptimizer.jl</code></a><a class="docs-footer-nextpage" href="../../manual/manual/">Manual »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.13.0 on <span class="colophon-date" title="Friday 27 June 2025 13:05">Friday 27 June 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+best = find_best(sol)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(Objective = -2111.4702f0, Vars = Float32[0.0, 1.0, 0.0, 1.0, -0.1402573, -1.0, 1.0], Info = (Annealing = 0.43837878f0, Gradient = 0.0017466262f0, Momentum = 0.9576141f0), Label = &quot;phase_1&quot;)</code></pre><p>The values of the binaries are:</p><pre><code class="language-julia hljs">println(&quot;Binaries: &quot;, best.Vars[1:number_of_binaries])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Binaries: Float32[0.0, 1.0, 0.0]</code></pre><p>The values of the continuous variables are:</p><pre><code class="language-julia hljs">println(&quot;Continuous: &quot;, best.Vars[number_of_binaries+1:end])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Continuous: Float32[1.0, -0.1402573, -1.0, 1.0]</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« <code>AOCoptimizer.jl</code></a><a class="docs-footer-nextpage" href="../../manual/manual/">Manual »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.13.0 on <span class="colophon-date" title="Monday 30 June 2025 13:28">Monday 30 June 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
