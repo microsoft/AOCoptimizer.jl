@@ -71,10 +71,10 @@ Pkg.test("AOCoptimizer")
 
 ## Adding `AOCoptimizer.jl` as a dependency to your project
 
-The approach described in the previous section is suitable for projects
+The approach described in the previous section works for projects
 that either add the `Manifest.toml` file to the repository (in general not recommended),
-or for projects that do not use version control at all. The reason is that
-the URL of the `AOCoptimizer` package does not appear in the `Project.toml` file,
+or for projects that don't use version control at all. The reason is that
+the `URL` of the `AOCoptimizer` package doesn't appear in the `Project.toml` file,
 hence, creating problems for other developers who want to use the project
 that depends on `AOCoptimizer`.
 
