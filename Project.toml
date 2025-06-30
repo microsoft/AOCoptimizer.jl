@@ -1,6 +1,10 @@
 name = "AOCoptimizer"
 uuid = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
-authors = ["Kirill Kalinin <kkalinin@microsoft.com>", "Christos Gkantsidis <chrisgk@microsoft.com>"]
+authors = [
+    "Kirill Kalinin <kkalinin@microsoft.com>",
+    "Christos Gkantsidis <chrisgk@microsoft.com>",
+    "Pedro Maciel Xavier"
+]
 version = "0.2.1"
 
 [deps]

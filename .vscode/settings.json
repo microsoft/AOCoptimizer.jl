@@ -43,6 +43,7 @@
         "lenstr",
         "lualatex",
         "Lyutsarev",
+        "Maciel",
         "makedocs",
         "mathbb",
         "mathbf",
@@ -91,5 +92,6 @@
         "Yinyu",
         "Zentrum",
         "Zuse"
-    ]
+    ],
+    "julia.environmentPath": "e:\\Repos\\MSR\\OpticalCompute\\AOCoptimizer.jl\\notebooks"
 }
