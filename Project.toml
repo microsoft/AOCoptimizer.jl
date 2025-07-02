@@ -1,6 +1,10 @@
 name = "AOCoptimizer"
 uuid = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
-authors = ["Kirill Kalinin <kkalinin@microsoft.com>", "Christos Gkantsidis <chrisgk@microsoft.com>"]
+authors = [
+    "Kirill Kalinin <kkalinin@microsoft.com>",
+    "Christos Gkantsidis <chrisgk@microsoft.com>",
+    "Pedro Maciel Xavier"
+]
 version = "0.2.1"
 
 [deps]
@@ -27,9 +31,12 @@ TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [weakdeps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+MathOptInterface = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
 
 [extensions]
 CUDAExt = "CUDA"
+JuMPExt = ["JuMP", "MathOptInterface"]
 
 [compat]
 Adapt = "4.3"
@@ -46,6 +53,7 @@ Distributions = "0.25"
 IntervalSets = "0.7"
 JET = "0.9"
 JSON = "0.21"
+JuMP = "1"
 KernelAbstractions = "0.9"
 LinearAlgebra = "1.11"
 OrderedCollections = "1.8"

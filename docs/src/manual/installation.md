@@ -45,7 +45,7 @@ If the above does not work with the error
 please try the following:
 
 ```julia
-Pkg.dev(url="https://github.com/microsoft/AOCoptimizer.jl#main")
+Pkg.dev(url="https://github.com/microsoft/AOCoptimizer.jl")
 ```
 
 If you also want to use `CUDA` or `JuMP`,

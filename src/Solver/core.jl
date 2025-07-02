@@ -562,10 +562,19 @@ The `dt` parameter specifies the time step for the simulation.
 """
 function solve_qumo end
 
+const __solvers_registered::Ref{Bool} = Ref(false)
+
 function __register_solvers()
     @info "Registering default solvers"
+
+    if __solvers_registered[]
+        @warn "Solvers already registered, skipping"
+        return
+    end
 
     @eval @make_solver(solve_mixed_ising, explore_mixed_ising)
     @eval @make_solver(solve_positive_qumo, explore_positive_qumo)
     @eval @make_solver(solve_qumo, explore_qumo)
+
+    __solvers_registered[] = true
 end
