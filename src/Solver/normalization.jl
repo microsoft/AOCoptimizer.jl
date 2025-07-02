@@ -51,7 +51,7 @@ function _calculate_normalization_factor(interactions::AbstractMatrix{T}) where 
         λ = ( abs(λ_max) + abs(λ_min) ) / T(2.0)
     end
 
-    @assert λ > 0.0 "Largest eigenvalue $λ is not positive"
+    @assert λ >= 0.0 "Largest eigenvalue $λ is not positive"
     if λ <= 0.1
         @warn "Normalization factor $λ is either negative or small; using 1.0 instead"
         λ = T(1.0)

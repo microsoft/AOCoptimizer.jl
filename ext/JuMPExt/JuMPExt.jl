@@ -33,6 +33,7 @@ const SQT{T}  = MOI.ScalarQuadraticTerm{T}
 const SQF{T}  = MOI.ScalarQuadraticFunction{T}
 
 const Engine = AOC.Solver.Engine
+const aoc_api = AOC.api
 
 include("variables.jl")
 include("wrapper.jl")

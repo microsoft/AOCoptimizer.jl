@@ -17,3 +17,9 @@ model = Model(AOCoptimizer.MOI.Optimizer[])
 # The following will solve with default settings,
 # using 60sec as timeout value.
 optimize!(model)
+
+@show termination_status(model)
+@show objective_value(model)
+@show value(x)
+@show value(y)
+@show value(z)

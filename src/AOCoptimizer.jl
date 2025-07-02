@@ -47,6 +47,7 @@ include("FileFormats/FileFormats.jl")
 include("Algorithms/Algorithms.jl")
 
 include("Solver/Solver.jl")
+include("api/api.jl")
 
 include("precompile.jl")
 

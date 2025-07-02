@@ -157,4 +157,30 @@ AOCoptimizer.Solver._similar_vector(x::CuSparseMatrix, l) = CuVector{eltype(x)}(
 
 include("engine.jl")
 
+function AOCoptimizer.api.adjust_inputs_to_engine(
+    ::AOCoptimizer.Solver.EngineCuda,
+    matrix::AbstractMatrix{T},
+    linear::Union{Nothing,AbstractVector{T}} = nothing,
+) where T<:Real
+    version = CUDA.capability(dev.dev)
+
+    if version < v"5.3" && T === Float16
+        @warn "Computing with Float16 on a GPU with compute capability less than 5.3 is not supported. Switching to Float32."
+        if linear !== nothing
+            linear = Float32.(linear)
+        end
+        return Float32, Float32.(matrix), linear
+    end
+
+    if version < v"8.0" && T === BFloat16
+        @warn "Computing with BFloat16 on a GPU with compute capability less than 8.0 is not supported. Switching to Float32."
+        if linear !== nothing
+            linear = Float32.(linear)
+        end
+        return Float32, Float32.(matrix), linear
+    end
+
+    return T, matrix, linear
+end
+
 end # module CUDAExt

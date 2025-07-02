@@ -3,6 +3,7 @@ CurrentModule = AOCoptimizer
 DocTestSetup = quote
     import AOCoptimizer as AOC
     import AOCoptimizer.Solver as Solver
+    import AOCoptimizer.api as API
 end
 DocTestFilters = [r"AOCoptimizer|AOC"]
 ```
@@ -354,4 +355,41 @@ Solver._optimal_batch_size
 
 ```@docs
 Solver.Collector._default_best_assignment_collector
+```
+
+## `API`
+
+The `AOCoptimizer.api` module contains simplified (and rigid) interfaces to the solver.
+They're easier to use than the normal interfaces, but they don't give access to most configuration parameters.
+
+```@docs
+api.adjust_inputs_to_engine
+```
+
+```@docs
+api.GraphCutResult
+```
+
+```@docs
+api.compute_max_cut
+```
+
+```@docs
+api.IsingResult
+```
+
+```@docs
+api.compute_ising
+```
+
+```@docs
+api.compute_mixed_ising
+```
+
+```@docs
+api.compute_qumo_positive
+```
+
+```@docs
+api.compute_qumo
 ```

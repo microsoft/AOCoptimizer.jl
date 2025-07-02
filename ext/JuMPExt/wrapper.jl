@@ -410,17 +410,26 @@ function MOI.optimize!(optimizer::Optimizer{T}) where {T<:Real}
         error("Unknown sense $(optimizer.sense)")
     end
 
-    @error "Solve here"
+    result = aoc_api.compute_qumo(
+        sense,
+        quadratic,
+        linear,
+        optimizer.continuous,
+        seed,
+        time_limit;
+        work_dir = work_dir,
+        engine   = backend,
+    )
 
     if !(T === num_type)
         output = Dict(
-            "Objective"  => convert(T, output["Objective"]),
-            "Assignment" => convert.(T, output["Assignment"]),
+            "Objective"  => convert(T, result.Objective),
+            "Assignment" => convert.(T, result.Assignment),
         )
     else
         output = Dict(
-            "Objective"  => output["Objective"],
-            "Assignment" => output["Assignment"],
+            "Objective"  => result.Objective,
+            "Assignment" => result.Assignment,
         )
     end
 

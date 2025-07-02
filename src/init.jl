@@ -19,8 +19,15 @@ module MOI
     end
 end
 
+const __init_completed::Ref{Bool} = Ref(false)
+
 function init()
     @debug "Initializing AOCoptimizer..."
+
+    if __init_completed[]
+        @warn "AOCoptimizer already initialized, skipping"
+        return
+    end
 
     Solver.__register_non_linearities()
     Solver.__register_engines()
@@ -29,6 +36,7 @@ function init()
     MOI.__init()
 
     @debug "End of AOCoptimizer initialization."
+    __init_completed[] = true
     return
 end
 
