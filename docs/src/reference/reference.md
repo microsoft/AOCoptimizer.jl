@@ -387,9 +387,19 @@ api.compute_mixed_ising
 ```
 
 ```@docs
+api.QumoResult
+```
+
+```@docs
 api.compute_qumo_positive
 ```
 
 ```@docs
 api.compute_qumo
+```
+
+## `MathOptInterface` and `JuMP`
+
+```@docs
+MOI.init
 ```

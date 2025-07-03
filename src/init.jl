@@ -24,6 +24,8 @@ module MOI
             __jump_ext = __modules[__index_of_jump_ext]
             Optimizer[] = __jump_ext.Optimizer
         end
+
+        return nothing
     end
 end
 
