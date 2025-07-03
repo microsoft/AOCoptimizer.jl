@@ -153,7 +153,7 @@ function _copy_attributes!(optimizer, model)
                     MOI.set(optimizer, attr, ci, MOI.get(model, attr, ci))
                 end
             else
-                # throw(MOI.UnsupportedAttribute(attr))
+                throw(MOI.UnsupportedAttribute(attr))
             end
         end
     end
