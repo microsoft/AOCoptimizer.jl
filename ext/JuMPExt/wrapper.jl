@@ -373,7 +373,13 @@ function _parse_objective(
 
             if continuous[i] || continuous[j]
                 if i == j
-                    Q[i, j] += T(2.0) * qij
+                    #= The SQF function already has a 0.5 factor,
+                        hence, we do not need to multiply with 2 here.
+                        Hence, there is no need for this special case,
+                        but good to keep (including this comment) to
+                        avoid future errors.
+                    =#
+                    Q[i, j] += qij # * T(2.0)
                 else
                     Q[i, j] += qij
                     Q[j, i] += qij

@@ -6,7 +6,15 @@ init.jl
 module MOI
     Optimizer :: Ref{Any} = nothing
 
-    function __init()
+    """
+        init()
+
+    Enables the AOCoptimizer backend for MathOptInterface (MOI), if available.
+    Typically, users should not call this explicitly. Instead, the `JuMP` and `MathOptInterface`
+    packages should be imported before importing `AOCoptimizer` and
+    calling `AOCoptimizer.init()`.
+    """
+    function init()
         __modules = Base.loaded_modules_array()
         __index_of_jump_ext = findfirst(x -> nameof(x) == :JuMPExt, __modules)
         if __index_of_jump_ext === nothing
@@ -33,7 +41,7 @@ function init()
     Solver.__register_engines()
     Solver.__register_solvers()
 
-    MOI.__init()
+    MOI.init()
 
     @debug "End of AOCoptimizer initialization."
     __init_completed[] = true

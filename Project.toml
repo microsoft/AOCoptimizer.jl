@@ -56,6 +56,7 @@ JSON = "0.21"
 JuMP = "1"
 KernelAbstractions = "0.9"
 LinearAlgebra = "1.11"
+MathOptInterface = "1"
 OrderedCollections = "1.8"
 Pkg = "1.11"
 PrecompileTools = "1"
@@ -71,7 +72,9 @@ julia = "1"
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 CodecBzip2 = "523fee87-0ab8-5b00-afb7-3ecf72e48cfd"
 JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+MathOptInterface = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Aqua", "CodecBzip2", "JET", "Test"]
+test = ["Aqua", "CodecBzip2", "JET", "JuMP", "MathOptInterface", "Test"]

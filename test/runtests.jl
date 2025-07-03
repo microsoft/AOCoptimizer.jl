@@ -33,6 +33,7 @@ include("utils.jl")
     include("test_reader_simple_graph.jl")
     include("test_reader_qio.jl")
     include("test_api.jl")
+    include("test_jump.jl")
 end
 
 if !disable_jet
