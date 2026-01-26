@@ -1,11 +1,7 @@
 name = "AOCoptimizer"
 uuid = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
-authors = [
-    "Kirill Kalinin <kkalinin@microsoft.com>",
-    "Christos Gkantsidis <chrisgk@microsoft.com>",
-    "Pedro Maciel Xavier"
-]
 version = "0.3.0"
+authors = ["Kirill Kalinin <kkalinin@microsoft.com>", "Christos Gkantsidis <chrisgk@microsoft.com>", "Pedro Maciel Xavier"]
 
 [deps]
 Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
@@ -42,7 +38,7 @@ JuMPExt = ["JuMP", "MathOptInterface"]
 Adapt = "4.3"
 Aqua = "0.8"
 ArnoldiMethod = "0.4"
-BFloat16s = "0.5"
+BFloat16s = "0.5, 0.6"
 CUDA = "5"
 CodecBzip2 = "0.8"
 Compat = "4"
