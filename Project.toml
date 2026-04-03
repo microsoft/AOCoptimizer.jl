@@ -1,11 +1,7 @@
 name = "AOCoptimizer"
 uuid = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
-authors = [
-    "Kirill Kalinin <kkalinin@microsoft.com>",
-    "Christos Gkantsidis <chrisgk@microsoft.com>",
-    "Pedro Maciel Xavier"
-]
 version = "0.3.0"
+authors = ["Kirill Kalinin <kkalinin@microsoft.com>", "Christos Gkantsidis <chrisgk@microsoft.com>", "Pedro Maciel Xavier"]
 
 [deps]
 Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
@@ -52,7 +48,7 @@ Dates = "1.11"
 Distributions = "0.25"
 IntervalSets = "0.7"
 JET = "0.9"
-JSON = "0.21"
+JSON = "0.21, 1"
 JuMP = "1"
 KernelAbstractions = "0.9"
 LinearAlgebra = "1.11"
