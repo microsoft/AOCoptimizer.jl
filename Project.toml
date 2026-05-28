@@ -1,11 +1,7 @@
 name = "AOCoptimizer"
 uuid = "ba4aa9bd-6938-48c2-966f-258481ba1c4a"
-authors = [
-    "Kirill Kalinin <kkalinin@microsoft.com>",
-    "Christos Gkantsidis <chrisgk@microsoft.com>",
-    "Pedro Maciel Xavier"
-]
 version = "0.3.0"
+authors = ["Kirill Kalinin <kkalinin@microsoft.com>", "Christos Gkantsidis <chrisgk@microsoft.com>", "Pedro Maciel Xavier"]
 
 [deps]
 Adapt = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
@@ -47,7 +43,7 @@ CUDA = "5"
 CodecBzip2 = "0.8"
 Compat = "4"
 CpuId = "0.3"
-DataStructures = "0.18"
+DataStructures = "0.18, 0.19"
 Dates = "1.11"
 Distributions = "0.25"
 IntervalSets = "0.7"
