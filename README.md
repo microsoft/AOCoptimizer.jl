@@ -1,5 +1,7 @@
 # `AOCoptimizer.jl`
 
+>**This repository is preserved for historical interest and is no longer actively maintained.**
+
 The [Analog Optical Computer (AOC)](https://www.microsoft.com/en-us/research/project/aoc/)
 project is building an analog optical computer that
 has the potential to accelerate AI inference and hard optimization workloads by 100x.
